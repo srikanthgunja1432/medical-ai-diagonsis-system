@@ -144,25 +144,25 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="bg-gradient-to-r from-primary to-primary/80 py-16 md:py-24">
+        <section className="bg-gradient-to-r from-primary to-primary/80 dark:from-primary/20 dark:to-primary/5 py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground dark:text-foreground mb-4">
               {isAuthenticated ? 'Your health journey continues!' : 'Ready to take control of your health?'}
             </h2>
-            <p className="text-primary-foreground/80 text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-primary-foreground/80 dark:text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
               {isAuthenticated
                 ? 'Access your dashboard to manage appointments and connect with doctors.'
                 : 'Join thousands of patients who are already experiencing better healthcare.'}
             </p>
             {mounted && !isLoading && (
               isAuthenticated ? (
-                <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
+                <Button size="lg" variant="secondary" className="text-lg px-8 py-6 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90" asChild>
                   <Link href={dashboardPath}>
                     <LayoutDashboard className="mr-2 h-5 w-5" /> Go to Dashboard
                   </Link>
                 </Button>
               ) : (
-                <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
+                <Button size="lg" variant="secondary" className="text-lg px-8 py-6 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90" asChild>
                   <Link href="/auth/register">
                     Create Free Account <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>

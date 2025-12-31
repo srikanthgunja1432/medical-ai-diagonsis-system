@@ -1,5 +1,7 @@
 "use client"
 
+import { ModeToggle } from "@/components/mode-toggle"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Heart, LogOut, Stethoscope, LayoutDashboard } from "lucide-react"
@@ -50,6 +52,7 @@ export function Navbar() {
                     </nav>
 
                     <div className="flex items-center space-x-3 ml-6">
+                        <ModeToggle />
                         {!mounted || isLoading ? (
                             <div className="h-10 w-24 animate-pulse bg-muted rounded-lg" />
                         ) : isAuthenticated ? (
@@ -63,7 +66,7 @@ export function Navbar() {
                                 <Button
                                     variant="outline"
                                     onClick={logout}
-                                    className="gap-2 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
+                                    className="gap-2 border-destructive/20 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
                                 >
                                     <LogOut className="h-4 w-4" />
                                     <span className="hidden sm:inline">Logout</span>

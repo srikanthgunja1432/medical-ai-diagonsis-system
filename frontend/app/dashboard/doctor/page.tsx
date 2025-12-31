@@ -401,11 +401,11 @@ export default function DoctorDashboard() {
             {/* Header */}
             <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Doctor Dashboard</h1>
-                    <p className="text-slate-600 dark:text-slate-400 mt-1">Manage your appointments and patients</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Doctor Dashboard</h1>
+                    <p className="text-muted-foreground mt-1">Manage your appointments and patients</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="gap-2 border-slate-300 dark:border-slate-600" asChild>
+                    <Button variant="outline" className="gap-2" asChild>
                         <Link href="/dashboard/doctor/schedule">
                             <Clock className="h-4 w-4" /> Schedule
                         </Link>
@@ -420,36 +420,36 @@ export default function DoctorDashboard() {
 
             {/* Stats Cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-700 dark:text-slate-300">Total Appointments</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Total Appointments</CardTitle>
                         <Calendar className="h-4 w-4 text-primary" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-bold text-slate-900 dark:text-white">{appointments.length}</div>
+                        <div className="text-3xl font-bold text-foreground">{appointments.length}</div>
                     </CardContent>
                 </Card>
-                <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-700 dark:text-slate-300">Pending</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Pending</CardTitle>
                         <Clock className="h-4 w-4 text-amber-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-amber-600">{pendingCount}</div>
                     </CardContent>
                 </Card>
-                <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-700 dark:text-slate-300">Confirmed</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Confirmed</CardTitle>
                         <Check className="h-4 w-4 text-emerald-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-emerald-600">{confirmedCount}</div>
                     </CardContent>
                 </Card>
-                <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-700 dark:text-slate-300">Completed</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Completed</CardTitle>
                         <CheckCircle className="h-4 w-4 text-blue-500" />
                     </CardHeader>
                     <CardContent>
@@ -459,16 +459,16 @@ export default function DoctorDashboard() {
             </div>
 
             {/* Appointments List */}
-            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-                <h2 className="text-xl font-semibold mb-4 text-slate-900 dark:text-white">Appointments</h2>
+            <div className="bg-card rounded-xl border border-border p-6">
+                <h2 className="text-xl font-semibold mb-4 text-foreground">Appointments</h2>
                 {appointments.length === 0 ? (
-                    <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                    <div className="text-center py-8 text-muted-foreground">
                         No appointments found.
                     </div>
                 ) : (
                     <div className="grid gap-4">
                         {appointments.map((appt) => (
-                            <Card key={appt.id} className="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700">
+                            <Card key={appt.id} className="bg-muted/30 border-border">
                                 <CardContent className="p-6">
                                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                                         <div className="flex items-start gap-4">
@@ -476,30 +476,30 @@ export default function DoctorDashboard() {
                                                 <User className="h-6 w-6 text-primary" />
                                             </div>
                                             <div className="space-y-1">
-                                                <div className="font-semibold text-slate-900 dark:text-white">
+                                                <div className="font-semibold text-foreground">
                                                     {getPatientName(appt.patientId)}
                                                 </div>
                                                 {getPatientEmail(appt.patientId) && (
-                                                    <div className="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                                                    <div className="text-sm text-muted-foreground flex items-center gap-2">
                                                         <Mail className="h-3.5 w-3.5" />
                                                         {getPatientEmail(appt.patientId)}
                                                     </div>
                                                 )}
-                                                <div className="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                                                <div className="text-sm text-muted-foreground flex items-center gap-2">
                                                     <Calendar className="h-3.5 w-3.5" />
                                                     {appt.date} at {appt.time}
                                                 </div>
                                                 {appt.symptoms && (
                                                     <div className="text-sm">
-                                                        <span className="text-slate-500 dark:text-slate-400">Symptoms:</span>{" "}
-                                                        <span className="text-slate-700 dark:text-slate-300">{appt.symptoms}</span>
+                                                        <span className="text-muted-foreground">Symptoms:</span>{" "}
+                                                        <span className="text-foreground">{appt.symptoms}</span>
                                                     </div>
                                                 )}
                                                 <div className="pt-1">
-                                                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${appt.status === 'confirmed' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300' :
-                                                        appt.status === 'cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' :
-                                                            appt.status === 'completed' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' :
-                                                                'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300'
+                                                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${appt.status === 'confirmed' ? 'badge-success' :
+                                                        appt.status === 'cancelled' ? 'badge-error' :
+                                                            appt.status === 'completed' ? 'badge-info' :
+                                                                'badge-warning'
                                                         }`}>
                                                         {appt.status.charAt(0).toUpperCase() + appt.status.slice(1)}
                                                     </span>
@@ -521,7 +521,7 @@ export default function DoctorDashboard() {
                                                 <>
                                                     <Button
                                                         size="sm"
-                                                        className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1"
+                                                        className="gap-1"
                                                         onClick={() => updateAppointmentStatus(appt.id, 'confirmed')}
                                                     >
                                                         <Check className="w-4 h-4" /> Accept
@@ -529,7 +529,7 @@ export default function DoctorDashboard() {
                                                     <Button
                                                         size="sm"
                                                         variant="outline"
-                                                        className="border-red-300 text-red-600 hover:bg-red-50 gap-1"
+                                                        className="border-destructive/30 text-destructive hover:bg-destructive/10 gap-1"
                                                         onClick={() => updateAppointmentStatus(appt.id, 'cancelled')}
                                                     >
                                                         <X className="w-4 h-4" /> Decline
@@ -539,7 +539,7 @@ export default function DoctorDashboard() {
                                             {appt.status === 'confirmed' && (
                                                 <Button
                                                     size="sm"
-                                                    className="bg-blue-600 hover:bg-blue-700 text-white gap-1"
+                                                    className="gap-1"
                                                     onClick={() => openCompleteModal(appt)}
                                                 >
                                                     <CheckCircle className="w-4 h-4" /> Complete
@@ -559,7 +559,7 @@ export default function DoctorDashboard() {
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
-                                                    className="gap-1 border-purple-300 text-purple-600 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400"
+                                                    className="gap-1 text-primary border-primary/20 hover:bg-primary/10"
                                                     onClick={() => openPrescriptionModal(appt)}
                                                 >
                                                     <Pill className="w-4 h-4" /> Prescription
@@ -577,10 +577,10 @@ export default function DoctorDashboard() {
             {/* Patient Details Modal */}
             {showPatientModal && selectedPatient && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <Card className="w-full max-w-md bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-                        <CardHeader className="border-b border-slate-200 dark:border-slate-700">
+                    <Card className="w-full max-w-md bg-card border-border">
+                        <CardHeader className="border-b border-border">
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-slate-900 dark:text-white">Patient Profile</CardTitle>
+                                <CardTitle className="text-foreground">Patient Profile</CardTitle>
                                 <Button variant="ghost" size="sm" onClick={() => setShowPatientModal(false)}>
                                     <X className="h-4 w-4" />
                                 </Button>
@@ -592,33 +592,33 @@ export default function DoctorDashboard() {
                                     <User className="h-8 w-8 text-primary" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+                                    <h3 className="text-xl font-semibold text-foreground">
                                         {selectedPatient.firstName} {selectedPatient.lastName}
                                     </h3>
-                                    <p className="text-slate-500 dark:text-slate-400">Patient</p>
+                                    <p className="text-muted-foreground">Patient</p>
                                 </div>
                             </div>
 
                             <div className="space-y-3 pt-4">
-                                <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                                <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
                                     <Mail className="h-5 w-5 text-primary" />
                                     <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">Email</p>
-                                        <p className="text-slate-900 dark:text-white">{selectedPatient.email}</p>
+                                        <p className="text-xs text-muted-foreground">Email</p>
+                                        <p className="text-foreground">{selectedPatient.email}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                                <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
                                     <Phone className="h-5 w-5 text-primary" />
                                     <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">Phone</p>
-                                        <p className="text-slate-900 dark:text-white">{selectedPatient.phone || 'Not provided'}</p>
+                                        <p className="text-xs text-muted-foreground">Phone</p>
+                                        <p className="text-foreground">{selectedPatient.phone || 'Not provided'}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                                <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
                                     <MapPin className="h-5 w-5 text-primary" />
                                     <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">Address</p>
-                                        <p className="text-slate-900 dark:text-white">{selectedPatient.address || 'Not provided'}</p>
+                                        <p className="text-xs text-muted-foreground">Address</p>
+                                        <p className="text-foreground">{selectedPatient.address || 'Not provided'}</p>
                                     </div>
                                 </div>
                             </div>
@@ -630,12 +630,12 @@ export default function DoctorDashboard() {
             {/* Complete Appointment Modal */}
             {showCompleteModal && selectedAppointment && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <Card className="w-full max-w-md bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-                        <CardHeader className="border-b border-slate-200 dark:border-slate-700">
+                    <Card className="w-full max-w-md bg-card border-border">
+                        <CardHeader className="border-b border-border">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <CardTitle className="text-slate-900 dark:text-white">Complete Appointment</CardTitle>
-                                    <CardDescription className="text-slate-500 dark:text-slate-400">
+                                    <CardTitle className="text-foreground">Complete Appointment</CardTitle>
+                                    <CardDescription className="text-muted-foreground">
                                         This will create a medical record for the patient
                                     </CardDescription>
                                 </div>
@@ -646,43 +646,43 @@ export default function DoctorDashboard() {
                         </CardHeader>
                         <CardContent className="pt-6 space-y-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="type" className="text-slate-900 dark:text-white">Record Type</Label>
+                                <Label htmlFor="type" className="text-foreground">Record Type</Label>
                                 <Input
                                     id="type"
                                     value={completeForm.type}
                                     onChange={(e) => setCompleteForm({ ...completeForm, type: e.target.value })}
                                     placeholder="Consultation"
-                                    className="border-slate-300 dark:border-slate-600"
+                                    className="border-input"
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="description" className="text-slate-900 dark:text-white">Description</Label>
+                                <Label htmlFor="description" className="text-foreground">Description</Label>
                                 <Input
                                     id="description"
                                     value={completeForm.description}
                                     onChange={(e) => setCompleteForm({ ...completeForm, description: e.target.value })}
                                     placeholder="Brief description of the consultation"
-                                    className="border-slate-300 dark:border-slate-600"
+                                    className="border-input"
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="result" className="text-slate-900 dark:text-white">Result/Diagnosis</Label>
+                                <Label htmlFor="result" className="text-foreground">Result/Diagnosis</Label>
                                 <Input
                                     id="result"
                                     value={completeForm.result}
                                     onChange={(e) => setCompleteForm({ ...completeForm, result: e.target.value })}
                                     placeholder="Completed, Normal, etc."
-                                    className="border-slate-300 dark:border-slate-600"
+                                    className="border-input"
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="notes" className="text-slate-900 dark:text-white">Notes</Label>
+                                <Label htmlFor="notes" className="text-foreground">Notes</Label>
                                 <Input
                                     id="notes"
                                     value={completeForm.notes}
                                     onChange={(e) => setCompleteForm({ ...completeForm, notes: e.target.value })}
                                     placeholder="Prescriptions, follow-up instructions, etc."
-                                    className="border-slate-300 dark:border-slate-600"
+                                    className="border-input"
                                 />
                             </div>
                             <div className="flex gap-2 pt-4">
@@ -697,185 +697,192 @@ export default function DoctorDashboard() {
                         </CardContent>
                     </Card>
                 </div>
-            )}
+            )
+            }
 
             {/* Chat Modal */}
-            {showChatModal && selectedAppointment && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <Card className="w-full max-w-lg h-[500px] flex flex-col bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-                        <CardHeader className="border-b border-slate-200 dark:border-slate-700">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <CardTitle className="text-slate-900 dark:text-white">
-                                        Chat with {getPatientName(selectedAppointment.patientId)}
-                                    </CardTitle>
-                                    <CardDescription className="text-slate-500 dark:text-slate-400">
-                                        Messages are synced in real-time
-                                    </CardDescription>
-                                </div>
-                                <Button variant="ghost" size="sm" onClick={() => setShowChatModal(false)}>
-                                    <X className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-slate-900">
-                            {chatMessages.length === 0 ? (
-                                <div className="flex items-center justify-center h-full text-slate-500 dark:text-slate-400">
-                                    No messages yet. Start the conversation!
-                                </div>
-                            ) : (
-                                chatMessages.map((msg) => (
-                                    <div
-                                        key={msg.id}
-                                        className={`flex ${msg.senderRole === 'doctor' ? 'justify-end' : 'justify-start'}`}
-                                    >
-                                        <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${msg.senderRole === 'doctor'
-                                            ? 'bg-primary text-white'
-                                            : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700'
-                                            }`}>
-                                            <p className="text-sm">{msg.content}</p>
-                                            <p className={`text-xs mt-1 ${msg.senderRole === 'doctor' ? 'text-white/70' : 'text-slate-500 dark:text-slate-400'
-                                                }`}>
-                                                {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-                            <div ref={messagesEndRef} />
-                        </CardContent>
-                        <div className="border-t border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800">
-                            <div className="flex gap-2">
-                                <Input
-                                    placeholder="Type a message..."
-                                    value={newMessage}
-                                    onChange={(e) => setNewMessage(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && !sendingMessage && sendMessage()}
-                                    className="flex-1 border-slate-300 dark:border-slate-600"
-                                    disabled={sendingMessage}
-                                />
-                                <Button onClick={sendMessage} disabled={sendingMessage || !newMessage.trim()}>
-                                    {sendingMessage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                                </Button>
-                            </div>
-                        </div>
-                    </Card>
-                </div>
-            )}
-
-            {/* Prescription Modal */}
-            {showPrescriptionModal && prescriptionAppointment && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-                    <Card className="w-full max-w-2xl bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 my-8">
-                        <CardHeader className="border-b border-slate-200 dark:border-slate-700">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
-                                        <Pill className="h-5 w-5 text-purple-600" /> Write Prescription
-                                    </CardTitle>
-                                    <CardDescription className="text-slate-500 dark:text-slate-400">
-                                        For patient: {getPatientName(prescriptionAppointment.patientId)}
-                                    </CardDescription>
-                                </div>
-                                <Button variant="ghost" size="sm" onClick={() => setShowPrescriptionModal(false)}>
-                                    <X className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="pt-6 space-y-6 max-h-[60vh] overflow-y-auto">
-                            {/* Diagnosis */}
-                            <div className="space-y-2">
-                                <Label className="text-slate-900 dark:text-white">Diagnosis</Label>
-                                <Input
-                                    value={prescriptionDiagnosis}
-                                    onChange={(e) => setPrescriptionDiagnosis(e.target.value)}
-                                    placeholder="Enter diagnosis..."
-                                    className="border-slate-300 dark:border-slate-600"
-                                />
-                            </div>
-
-                            {/* Medications */}
-                            <div className="space-y-4">
+            {
+                showChatModal && selectedAppointment && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                        <Card className="w-full max-w-lg h-[500px] flex flex-col bg-card border-border">
+                            <CardHeader className="border-b border-border">
                                 <div className="flex items-center justify-between">
-                                    <Label className="text-slate-900 dark:text-white">Medications</Label>
-                                    <Button size="sm" variant="outline" onClick={addMedication}>
-                                        + Add Medication
+                                    <div>
+                                        <CardTitle className="text-foreground">
+                                            Chat with {getPatientName(selectedAppointment.patientId)}
+                                        </CardTitle>
+                                        <CardDescription className="text-muted-foreground">
+                                            Messages are synced in real-time
+                                        </CardDescription>
+                                    </div>
+                                    <Button variant="ghost" size="sm" onClick={() => setShowChatModal(false)}>
+                                        <X className="h-4 w-4" />
                                     </Button>
                                 </div>
-
-                                {medications.map((med, index) => (
-                                    <div key={index} className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg space-y-3 bg-slate-50 dark:bg-slate-900">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Medication {index + 1}</span>
-                                            {medications.length > 1 && (
-                                                <Button size="sm" variant="ghost" onClick={() => removeMedication(index)} className="text-red-500 hover:text-red-700">
-                                                    <X className="h-4 w-4" />
-                                                </Button>
-                                            )}
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <Input
-                                                placeholder="Medication name *"
-                                                value={med.name}
-                                                onChange={(e) => updateMedication(index, 'name', e.target.value)}
-                                                className="border-slate-300 dark:border-slate-600"
-                                            />
-                                            <Input
-                                                placeholder="Dosage (e.g., 500mg) *"
-                                                value={med.dosage}
-                                                onChange={(e) => updateMedication(index, 'dosage', e.target.value)}
-                                                className="border-slate-300 dark:border-slate-600"
-                                            />
-                                            <Input
-                                                placeholder="Frequency (e.g., twice daily)"
-                                                value={med.frequency}
-                                                onChange={(e) => updateMedication(index, 'frequency', e.target.value)}
-                                                className="border-slate-300 dark:border-slate-600"
-                                            />
-                                            <Input
-                                                placeholder="Duration (e.g., 7 days)"
-                                                value={med.duration}
-                                                onChange={(e) => updateMedication(index, 'duration', e.target.value)}
-                                                className="border-slate-300 dark:border-slate-600"
-                                            />
-                                        </div>
-                                        <Input
-                                            placeholder="Special instructions..."
-                                            value={med.instructions}
-                                            onChange={(e) => updateMedication(index, 'instructions', e.target.value)}
-                                            className="border-slate-300 dark:border-slate-600"
-                                        />
+                            </CardHeader>
+                            <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/30">
+                                {chatMessages.length === 0 ? (
+                                    <div className="flex items-center justify-center h-full text-muted-foreground">
+                                        No messages yet. Start the conversation!
                                     </div>
-                                ))}
+                                ) : (
+                                    chatMessages.map((msg) => (
+                                        <div
+                                            key={msg.id}
+                                            className={`flex ${msg.senderRole === 'doctor' ? 'justify-end' : 'justify-start'}`}
+                                        >
+                                            <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${msg.senderRole === 'doctor'
+                                                ? 'bg-primary text-primary-foreground'
+                                                : 'bg-card text-foreground border border-border'
+                                                }`}>
+                                                <p className="text-sm">{msg.content}</p>
+                                                <p className={`text-xs mt-1 ${msg.senderRole === 'doctor' ? 'text-primary-foreground/70' : 'text-muted-foreground'
+                                                    }`}>
+                                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                                <div ref={messagesEndRef} />
+                            </CardContent>
+                            <div className="border-t border-border p-4 bg-card">
+                                <div className="flex gap-2">
+                                    <Input
+                                        placeholder="Type a message..."
+                                        value={newMessage}
+                                        onChange={(e) => setNewMessage(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && !sendingMessage && sendMessage()}
+                                        className="flex-1 border-input"
+                                        disabled={sendingMessage}
+                                    />
+                                    <Button onClick={sendMessage} disabled={sendingMessage || !newMessage.trim()}>
+                                        {sendingMessage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                                    </Button>
+                                </div>
                             </div>
+                        </Card>
+                    </div>
+                )
+            }
 
-                            {/* Notes */}
-                            <div className="space-y-2">
-                                <Label className="text-slate-900 dark:text-white">Additional Notes</Label>
-                                <textarea
-                                    value={prescriptionNotes}
-                                    onChange={(e) => setPrescriptionNotes(e.target.value)}
-                                    placeholder="Any additional notes or instructions..."
-                                    className="w-full h-20 px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                />
+            {/* Prescription Modal */}
+            {
+                showPrescriptionModal && prescriptionAppointment && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+                        <Card className="w-full max-w-2xl bg-card border-border my-8">
+                            <CardHeader className="border-b border-border">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <CardTitle className="text-foreground flex items-center gap-2">
+                                            <Pill className="h-5 w-5 text-purple-500" /> Write Prescription
+                                        </CardTitle>
+                                        <CardDescription className="text-muted-foreground">
+                                            For patient: {getPatientName(prescriptionAppointment.patientId)}
+                                        </CardDescription>
+                                    </div>
+                                    <Button variant="ghost" size="sm" onClick={() => setShowPrescriptionModal(false)}>
+                                        <X className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="pt-6 space-y-6 max-h-[60vh] overflow-y-auto">
+                                {/* Diagnosis */}
+                                <div className="space-y-2">
+                                    <Label className="text-foreground">Diagnosis</Label>
+                                    <Input
+                                        value={prescriptionDiagnosis}
+                                        onChange={(e) => setPrescriptionDiagnosis(e.target.value)}
+                                        placeholder="Enter diagnosis..."
+                                        className="border-input"
+                                    />
+                                </div>
+
+                                {/* Medications */}
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <Label className="text-foreground">Medications</Label>
+                                        <Button size="sm" variant="outline" onClick={addMedication}>
+                                            + Add Medication
+                                        </Button>
+                                    </div>
+
+                                    {medications.map((med, index) => (
+                                        <div key={index} className="p-4 border border-border rounded-lg space-y-3 bg-muted/30">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-sm font-medium text-foreground">Medication {index + 1}</span>
+                                                {medications.length > 1 && (
+                                                    <Button size="sm" variant="ghost" onClick={() => removeMedication(index)} className="text-destructive hover:text-destructive/90">
+                                                        <X className="h-4 w-4" />
+                                                    </Button>
+                                                )}
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <Input
+                                                    placeholder="Medication name *"
+                                                    value={med.name}
+                                                    onChange={(e) => updateMedication(index, 'name', e.target.value)}
+                                                    className="border-input"
+                                                />
+                                                <Input
+                                                    placeholder="Dosage (e.g., 500mg) *"
+                                                    value={med.dosage}
+                                                    onChange={(e) => updateMedication(index, 'dosage', e.target.value)}
+                                                    className="border-input"
+                                                />
+                                                <Input
+                                                    placeholder="Frequency (e.g., twice daily)"
+                                                    value={med.frequency}
+                                                    onChange={(e) => updateMedication(index, 'frequency', e.target.value)}
+                                                    className="border-input"
+                                                />
+                                                <Input
+                                                    placeholder="Duration (e.g., 7 days)"
+                                                    value={med.duration}
+                                                    onChange={(e) => updateMedication(index, 'duration', e.target.value)}
+                                                    className="border-input"
+                                                />
+                                            </div>
+                                            <Input
+                                                placeholder="Special instructions..."
+                                                value={med.instructions}
+                                                onChange={(e) => updateMedication(index, 'instructions', e.target.value)}
+                                                className="border-input"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Notes */}
+                                <div className="space-y-2">
+                                    <Label className="text-foreground">Additional Notes</Label>
+                                    <textarea
+                                        value={prescriptionNotes}
+                                        onChange={(e) => setPrescriptionNotes(e.target.value)}
+                                        placeholder="Any additional notes or instructions..."
+                                        className="w-full h-20 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                                    />
+                                </div>
+                            </CardContent>
+
+                            <div className="border-t border-border p-4 flex gap-2">
+                                <Button variant="outline" className="flex-1" onClick={() => setShowPrescriptionModal(false)}>
+                                    Cancel
+                                </Button>
+                                <Button
+                                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                                    onClick={handleSavePrescription}
+                                    disabled={savingPrescription}
+                                >
+                                    {savingPrescription && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Save Prescription
+                                </Button>
                             </div>
-                        </CardContent>
-                        <div className="border-t border-slate-200 dark:border-slate-700 p-4 flex gap-2">
-                            <Button variant="outline" className="flex-1" onClick={() => setShowPrescriptionModal(false)}>
-                                Cancel
-                            </Button>
-                            <Button
-                                className="flex-1 bg-purple-600 hover:bg-purple-700"
-                                onClick={handleSavePrescription}
-                                disabled={savingPrescription}
-                            >
-                                {savingPrescription && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Save Prescription
-                            </Button>
-                        </div>
-                    </Card>
-                </div>
-            )}
+                        </Card>
+                    </div >
+                )
+            }
         </div>
     )
 }
+

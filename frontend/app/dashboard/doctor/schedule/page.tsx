@@ -158,8 +158,8 @@ export default function ScheduleManagementPage() {
                         </Link>
                     </Button>
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Schedule Management</h1>
-                        <p className="text-slate-600 dark:text-slate-400 mt-1">Manage your availability and appointment slots</p>
+                        <h1 className="text-3xl font-bold tracking-tight text-foreground">Schedule Management</h1>
+                        <p className="text-muted-foreground mt-1">Manage your availability and appointment slots</p>
                     </div>
                 </div>
                 <Button onClick={saveSchedule} disabled={saving} className="gap-2">
@@ -169,15 +169,15 @@ export default function ScheduleManagementPage() {
             </div>
 
             {saveSuccess && (
-                <div className="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4 text-emerald-700 dark:text-emerald-300">
+                <div className="badge-success bg-opacity-10 border-success/20 rounded-lg p-4">
                     Schedule saved successfully!
                 </div>
             )}
 
             {/* Slot Duration */}
-            <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+            <Card className="bg-card border-border">
                 <CardHeader>
-                    <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
+                    <CardTitle className=" text-foreground flex items-center gap-2">
                         <Clock className="h-5 w-5 text-primary" /> Appointment Duration
                     </CardTitle>
                     <CardDescription>Set the default duration for each appointment slot</CardDescription>
@@ -186,7 +186,7 @@ export default function ScheduleManagementPage() {
                     <Select
                         value={schedule.slotDuration.toString()}
                         onChange={(e) => setSchedule(prev => ({ ...prev, slotDuration: Number(e.target.value) }))}
-                        className="max-w-xs border-slate-300 dark:border-slate-600"
+                        className="max-w-xs border-input"
                     >
                         <option value="15">15 minutes</option>
                         <option value="30">30 minutes</option>
@@ -197,9 +197,9 @@ export default function ScheduleManagementPage() {
             </Card>
 
             {/* Weekly Schedule */}
-            <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+            <Card className="bg-card border-border">
                 <CardHeader>
-                    <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
+                    <CardTitle className="text-foreground flex items-center gap-2">
                         <Calendar className="h-5 w-5 text-primary" /> Weekly Schedule
                     </CardTitle>
                     <CardDescription>Set your working hours for each day of the week</CardDescription>
@@ -207,23 +207,23 @@ export default function ScheduleManagementPage() {
                 <CardContent className="space-y-4">
                     {DAYS.map(day => (
                         <div key={day} className={`p-4 rounded-lg border ${schedule.weeklySchedule[day].enabled
-                            ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700'
-                            : 'bg-slate-50 dark:bg-slate-900/50 border-slate-100 dark:border-slate-800'}`}>
+                            ? 'bg-card border-border'
+                            : 'bg-muted/30 border-border/50'}`}>
                             <div className="flex items-center justify-between flex-wrap gap-4">
                                 <div className="flex items-center gap-4">
                                     <button
                                         onClick={() => toggleDay(day)}
                                         className={`w-12 h-6 rounded-full transition-colors p-1 ${schedule.weeklySchedule[day].enabled
-                                                ? 'bg-primary'
-                                                : 'bg-slate-300 dark:bg-slate-600'
+                                            ? 'bg-primary'
+                                            : 'bg-muted'
                                             }`}
                                     >
                                         <div className={`w-4 h-4 rounded-full bg-white transition-transform ${schedule.weeklySchedule[day].enabled ? 'translate-x-6' : 'translate-x-0'
                                             }`} />
                                     </button>
                                     <span className={`font-medium ${schedule.weeklySchedule[day].enabled
-                                            ? 'text-slate-900 dark:text-white'
-                                            : 'text-slate-400'
+                                        ? 'text-foreground'
+                                        : 'text-muted-foreground'
                                         }`}>
                                         {DAY_LABELS[day]}
                                     </span>
@@ -235,14 +235,14 @@ export default function ScheduleManagementPage() {
                                             type="time"
                                             value={schedule.weeklySchedule[day].start}
                                             onChange={(e) => updateDaySchedule(day, 'start', e.target.value)}
-                                            className="w-32 border-slate-300 dark:border-slate-600"
+                                            className="w-32 border-input"
                                         />
-                                        <span className="text-slate-500">to</span>
+                                        <span className="text-muted-foreground">to</span>
                                         <Input
                                             type="time"
                                             value={schedule.weeklySchedule[day].end}
                                             onChange={(e) => updateDaySchedule(day, 'end', e.target.value)}
-                                            className="w-32 border-slate-300 dark:border-slate-600"
+                                            className="w-32 border-input"
                                         />
                                     </div>
                                 )}
@@ -253,10 +253,10 @@ export default function ScheduleManagementPage() {
             </Card>
 
             {/* Blocked Dates */}
-            <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+            <Card className="bg-card border-border">
                 <CardHeader>
-                    <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
-                        <X className="h-5 w-5 text-red-500" /> Blocked Dates
+                    <CardTitle className="text-foreground flex items-center gap-2">
+                        <X className="h-5 w-5 text-destructive" /> Blocked Dates
                     </CardTitle>
                     <CardDescription>Block specific dates when you&apos;re not available (vacations, holidays, etc.)</CardDescription>
                 </CardHeader>
@@ -267,7 +267,7 @@ export default function ScheduleManagementPage() {
                             value={newBlockedDate}
                             onChange={(e) => setNewBlockedDate(e.target.value)}
                             min={new Date().toISOString().split('T')[0]}
-                            className="max-w-xs border-slate-300 dark:border-slate-600"
+                            className="max-w-xs border-input"
                         />
                         <Button onClick={addBlockedDate} variant="outline">
                             Block Date
@@ -277,7 +277,7 @@ export default function ScheduleManagementPage() {
                     {schedule.blockedDates.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
                             {schedule.blockedDates.map(date => (
-                                <div key={date} className="inline-flex items-center gap-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-3 py-1.5 rounded-full text-sm">
+                                <div key={date} className="inline-flex items-center gap-2 bg-destructive/10 text-destructive px-3 py-1.5 rounded-full text-sm">
                                     {new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                     <button onClick={() => removeBlockedDate(date)} className="hover:text-red-900">
                                         <X className="h-4 w-4" />
@@ -286,7 +286,7 @@ export default function ScheduleManagementPage() {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-slate-500 dark:text-slate-400 text-sm">No blocked dates. Add dates when you won&apos;t be available.</p>
+                        <p className="text-muted-foreground text-sm">No blocked dates. Add dates when you won&apos;t be available.</p>
                     )}
                 </CardContent>
             </Card>

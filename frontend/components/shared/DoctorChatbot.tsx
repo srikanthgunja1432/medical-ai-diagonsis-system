@@ -130,11 +130,11 @@ export function DoctorChatbot() {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-700 text-white rounded-full p-4 shadow-2xl hover:shadow-primary/25 transition-all duration-300 hover:scale-110 group"
+                    className="fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground rounded-full p-4 shadow-2xl hover:shadow-primary/25 transition-all duration-300 hover:scale-110 group"
                     aria-label="Open AI Doctor Assistant"
                 >
                     <MessageCircle className="h-6 w-6 group-hover:rotate-12 transition-transform" />
-                    <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs rounded-full px-2 py-0.5 animate-pulse">
+                    <span className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-xs rounded-full px-2 py-0.5 animate-pulse">
                         AI
                     </span>
                 </button>
@@ -142,13 +142,13 @@ export function DoctorChatbot() {
 
             {/* Chat Window */}
             {isOpen && (
-                <div className="fixed bottom-6 right-6 z-50 w-[400px] h-[550px] flex flex-col shadow-2xl rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-                    <Card className="flex flex-col h-full bg-white dark:bg-slate-800 border-0">
+                <div className="fixed bottom-6 right-6 z-50 w-[400px] h-[550px] flex flex-col shadow-2xl rounded-2xl overflow-hidden border border-border">
+                    <Card className="flex flex-col h-full bg-card border-0">
                         {/* Header */}
-                        <CardHeader className="bg-gradient-to-r from-primary to-purple-600 text-white px-4 py-3 flex-shrink-0">
+                        <CardHeader className="bg-primary text-primary-foreground px-4 py-3 flex-shrink-0">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-white/20 rounded-full p-2">
+                                    <div className="bg-primary-foreground/20 rounded-full p-2">
                                         <Bot className="h-5 w-5" />
                                     </div>
                                     <div>
@@ -163,7 +163,7 @@ export function DoctorChatbot() {
                                         variant="ghost"
                                         size="sm"
                                         onClick={clearHistory}
-                                        className="text-white/80 hover:text-white hover:bg-white/20 h-8 w-8 p-0"
+                                        className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/20 h-8 w-8 p-0"
                                         title="Clear chat history"
                                     >
                                         <Trash2 className="h-4 w-4" />
@@ -172,7 +172,7 @@ export function DoctorChatbot() {
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => setIsOpen(false)}
-                                        className="text-white/80 hover:text-white hover:bg-white/20 h-8 w-8 p-0"
+                                        className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/20 h-8 w-8 p-0"
                                     >
                                         <X className="h-4 w-4" />
                                     </Button>
@@ -181,7 +181,7 @@ export function DoctorChatbot() {
                         </CardHeader>
 
                         {/* Messages */}
-                        <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-slate-900">
+                        <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/30">
                             {isLoadingHistory ? (
                                 <div className="flex items-center justify-center h-full">
                                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -191,10 +191,10 @@ export function DoctorChatbot() {
                                     <div className="bg-primary/10 rounded-full p-4 mb-4">
                                         <Bot className="h-10 w-10 text-primary" />
                                     </div>
-                                    <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
+                                    <h3 className="font-semibold text-foreground mb-2">
                                         How can I help you today?
                                     </h3>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                                    <p className="text-sm text-muted-foreground">
                                         Describe your symptoms and I&apos;ll recommend the best doctors for you.
                                     </p>
                                 </div>
@@ -206,14 +206,14 @@ export function DoctorChatbot() {
                                     >
                                         <div className={`flex items-start gap-2 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                                             <div className={`flex-shrink-0 rounded-full p-1.5 ${msg.role === 'user'
-                                                ? 'bg-primary text-white'
-                                                : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                                                ? 'bg-primary text-primary-foreground'
+                                                : 'bg-muted text-muted-foreground'
                                                 }`}>
                                                 {msg.role === 'user' ? <User className="h-3 w-3" /> : <Bot className="h-3 w-3" />}
                                             </div>
                                             <div className={`rounded-2xl px-4 py-2.5 ${msg.role === 'user'
-                                                ? 'bg-primary text-white rounded-tr-md'
-                                                : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-tl-md'
+                                                ? 'bg-primary text-primary-foreground rounded-tr-md'
+                                                : 'bg-card text-card-foreground border border-border rounded-tl-md'
                                                 }`}>
                                                 {msg.role === 'assistant' ? (
                                                     <div className="text-sm prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-headings:my-2 prose-strong:text-inherit">
@@ -232,14 +232,14 @@ export function DoctorChatbot() {
                             {isLoading && (
                                 <div className="flex justify-start">
                                     <div className="flex items-center gap-2">
-                                        <div className="bg-slate-200 dark:bg-slate-700 rounded-full p-1.5">
-                                            <Bot className="h-3 w-3 text-slate-600 dark:text-slate-300" />
+                                        <div className="bg-muted rounded-full p-1.5">
+                                            <Bot className="h-3 w-3 text-muted-foreground" />
                                         </div>
-                                        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-tl-md px-4 py-3">
+                                        <div className="bg-card border border-border rounded-2xl rounded-tl-md px-4 py-3">
                                             <div className="flex items-center gap-1">
-                                                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                                                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                                                <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                                <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                                <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                                             </div>
                                         </div>
                                     </div>
@@ -251,13 +251,13 @@ export function DoctorChatbot() {
 
                         {/* Error message */}
                         {error && (
-                            <div className="px-4 py-2 bg-red-50 dark:bg-red-900/20 border-t border-red-200 dark:border-red-800">
-                                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                            <div className="px-4 py-2 bg-destructive/10 border-t border-destructive/20">
+                                <p className="text-sm text-destructive">{error}</p>
                             </div>
                         )}
 
                         {/* Input */}
-                        <div className="border-t border-slate-200 dark:border-slate-700 p-3 bg-white dark:bg-slate-800 flex-shrink-0">
+                        <div className="border-t border-border p-3 bg-card flex-shrink-0">
                             <div className="flex gap-2">
                                 <Input
                                     placeholder="Describe your symptoms..."
@@ -265,7 +265,7 @@ export function DoctorChatbot() {
                                     onChange={(e) => setInputMessage(e.target.value)}
                                     onKeyDown={handleKeyDown}
                                     disabled={isLoading}
-                                    className="flex-1 border-slate-300 dark:border-slate-600 focus:ring-primary"
+                                    className="flex-1 border-input focus:ring-primary"
                                 />
                                 <Button
                                     onClick={sendMessage}

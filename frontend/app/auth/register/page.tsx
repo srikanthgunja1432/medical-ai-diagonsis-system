@@ -134,7 +134,7 @@ export default function RegisterPage() {
                         </div>
 
                         {error && (
-                            <div className="p-3 rounded-lg bg-red-50 text-red-700 text-sm">
+                            <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm border border-destructive/20">
                                 {error}
                             </div>
                         )}

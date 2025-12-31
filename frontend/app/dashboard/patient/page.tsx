@@ -251,13 +251,13 @@ export default function PatientDashboard() {
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'confirmed':
-                return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300'
+                return 'badge-success'
             case 'cancelled':
-                return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                return 'badge-error'
             case 'completed':
-                return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                return 'badge-info'
             default:
-                return 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300'
+                return 'badge-warning'
         }
     }
 
@@ -339,17 +339,17 @@ export default function PatientDashboard() {
             {/* Header */}
             <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Patient Dashboard</h1>
-                    <p className="text-slate-600 dark:text-slate-400 mt-1">Manage your health and appointments</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Patient Dashboard</h1>
+                    <p className="text-muted-foreground mt-1">Manage your health and appointments</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="gap-2 border-slate-300 dark:border-slate-600" asChild>
+                    <Button variant="outline" className="gap-2 border-border" asChild>
                         <Link href="/dashboard/patient/history">
                             <FileText className="h-4 w-4" />
                             Medical History
                         </Link>
                     </Button>
-                    <Button variant="outline" className="gap-2 border-slate-300 dark:border-slate-600" asChild>
+                    <Button variant="outline" className="gap-2 border-border" asChild>
                         <Link href="/dashboard/patient/profile">
                             <User className="h-4 w-4" />
                             My Profile
@@ -360,27 +360,27 @@ export default function PatientDashboard() {
 
             {/* My Appointments Section */}
             {appointments.length > 0 && (
-                <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-                    <h2 className="text-xl font-semibold mb-4 text-slate-900 dark:text-white">My Appointments</h2>
+                <div className="bg-card rounded-xl border border-border p-6">
+                    <h2 className="text-xl font-semibold mb-4 text-foreground">My Appointments</h2>
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {appointments.map((appt) => (
-                            <Card key={appt.id} className={`border-l-4 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 ${appt.status === 'completed' ? 'border-l-blue-500' : 'border-l-primary'
+                            <Card key={appt.id} className={`border-l-4 bg-muted/30 border-border ${appt.status === 'completed' ? 'border-l-blue-500' : 'border-l-primary'
                                 }`}>
                                 <CardContent className="pt-4">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="font-semibold text-slate-900 dark:text-white">{appt.doctorName}</span>
+                                        <span className="font-semibold text-foreground">{appt.doctorName}</span>
                                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${getStatusBadge(appt.status)}`}>
                                             {appt.status.charAt(0).toUpperCase() + appt.status.slice(1)}
                                         </span>
                                     </div>
-                                    <div className="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                                    <div className="text-sm text-muted-foreground flex items-center gap-2">
                                         <Calendar className="h-4 w-4" />
                                         {appt.date} at {appt.time}
                                     </div>
                                     {appt.symptoms && (
                                         <p className="text-sm mt-2">
-                                            <span className="text-slate-500 dark:text-slate-400">Symptoms:</span>{" "}
-                                            <span className="text-slate-700 dark:text-slate-300">{appt.symptoms}</span>
+                                            <span className="text-muted-foreground">Symptoms:</span>{" "}
+                                            <span className="text-foreground">{appt.symptoms}</span>
                                         </p>
                                     )}
                                     {appt.status !== 'cancelled' && appt.status !== 'completed' && (
@@ -395,8 +395,8 @@ export default function PatientDashboard() {
                                     )}
                                     {appt.status === 'completed' && (
                                         <div className="mt-3 space-y-2">
-                                            <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-center">
-                                                <span className="text-sm text-blue-700 dark:text-blue-300 flex items-center justify-center gap-1">
+                                            <div className="p-2 bg-secondary/50 rounded-lg text-center">
+                                                <span className="text-sm text-secondary-foreground flex items-center justify-center gap-1">
                                                     <CheckCircle className="h-4 w-4" />
                                                     Consultation completed - Check Medical History
                                                 </span>
@@ -405,7 +405,7 @@ export default function PatientDashboard() {
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
-                                                    className="w-full gap-1 border-amber-300 text-amber-600 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-400"
+                                                    className="w-full gap-1 border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
                                                     onClick={() => openRatingModal(appt)}
                                                 >
                                                     <Star className="h-4 w-4" /> Rate Doctor
@@ -428,12 +428,12 @@ export default function PatientDashboard() {
             {/* Available Doctors */}
             <div>
                 <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
-                    <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Available Doctors</h2>
-                    <span className="text-sm text-slate-500">{filteredDoctors.length} of {doctors.length} doctors</span>
+                    <h2 className="text-xl font-semibold text-foreground">Available Doctors</h2>
+                    <span className="text-sm text-muted-foreground">{filteredDoctors.length} of {doctors.length} doctors</span>
                 </div>
 
                 {/* Search and Filter Bar */}
-                <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 mb-6">
+                <div className="bg-card rounded-xl border border-border p-4 mb-6">
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         {/* Search */}
                         <div className="relative">
@@ -442,7 +442,7 @@ export default function PatientDashboard() {
                                 placeholder="Search doctors..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10 border-slate-300 dark:border-slate-600"
+                                className="pl-10 border-input"
                             />
                         </div>
 
@@ -450,7 +450,7 @@ export default function PatientDashboard() {
                         <Select
                             value={selectedSpecialty}
                             onChange={(e) => setSelectedSpecialty(e.target.value)}
-                            className="border-slate-300 dark:border-slate-600"
+                            className="border-input"
                         >
                             <option value="">All Specialties</option>
                             {specialties.map(spec => (
@@ -462,7 +462,7 @@ export default function PatientDashboard() {
                         <Select
                             value={minRating.toString()}
                             onChange={(e) => setMinRating(Number(e.target.value))}
-                            className="border-slate-300 dark:border-slate-600"
+                            className="border-input"
                         >
                             <option value="0">Any Rating</option>
                             <option value="3">3+ Stars</option>
@@ -474,7 +474,7 @@ export default function PatientDashboard() {
                         <Select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value as 'name' | 'rating')}
-                            className="border-slate-300 dark:border-slate-600"
+                            className="border-input"
                         >
                             <option value="rating">Sort by Rating</option>
                             <option value="name">Sort by Name</option>
@@ -483,21 +483,21 @@ export default function PatientDashboard() {
                 </div>
 
                 {filteredDoctors.length === 0 ? (
-                    <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-                        <CardContent className="py-8 text-center text-slate-500 dark:text-slate-400">
+                    <Card className="bg-card border-border">
+                        <CardContent className="py-8 text-center text-muted-foreground">
                             {doctors.length === 0 ? 'No doctors available at the moment.' : 'No doctors match your search criteria.'}
                         </CardContent>
                     </Card>
                 ) : (
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {filteredDoctors.map((doctor: Doctor) => (
-                            <Card key={doctor.id} className="hover:shadow-lg transition-all hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                            <Card key={doctor.id} className="hover:shadow-lg transition-all hover:-translate-y-1 bg-card border-border">
                                 <CardHeader className="flex flex-row items-center gap-4">
-                                    <div className="h-14 w-14 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex-shrink-0 ring-2 ring-primary/20">
+                                    <div className="h-14 w-14 rounded-full bg-muted overflow-hidden flex-shrink-0 ring-2 ring-ring/20">
                                         <img src={doctor.image} alt={doctor.name} className="h-full w-full object-cover" />
                                     </div>
                                     <div className="grid gap-1 min-w-0">
-                                        <CardTitle className="text-lg truncate text-slate-900 dark:text-white">{doctor.name}</CardTitle>
+                                        <CardTitle className="text-lg truncate text-foreground">{doctor.name}</CardTitle>
                                         <CardDescription className="flex items-center gap-1 flex-wrap">
                                             <span className="text-primary font-medium">{doctor.specialty}</span>
                                             {doctor.rating > 0 && (
@@ -505,7 +505,7 @@ export default function PatientDashboard() {
                                                     <Star className="h-3 w-3 fill-current" />
                                                     <span className="ml-0.5 text-xs">{doctor.rating}</span>
                                                     {doctor.rating_count > 0 && (
-                                                        <span className="ml-1 text-xs text-slate-400">({doctor.rating_count} {doctor.rating_count === 1 ? 'review' : 'reviews'})</span>
+                                                        <span className="ml-1 text-xs text-muted-foreground">({doctor.rating_count} {doctor.rating_count === 1 ? 'review' : 'reviews'})</span>
                                                     )}
                                                 </span>
                                             )}
@@ -513,11 +513,11 @@ export default function PatientDashboard() {
                                     </div>
                                 </CardHeader>
                                 <CardContent className="space-y-2">
-                                    <div className="flex items-center text-sm text-slate-600 dark:text-slate-400">
+                                    <div className="flex items-center text-sm text-muted-foreground">
                                         <MapPin className="mr-2 h-4 w-4 flex-shrink-0 text-primary/60" />
                                         <span className="truncate">{doctor.location}</span>
                                     </div>
-                                    <div className="flex items-start text-sm text-slate-600 dark:text-slate-400">
+                                    <div className="flex items-start text-sm text-muted-foreground">
                                         <Clock className="mr-2 h-4 w-4 mt-0.5 flex-shrink-0 text-primary/60" />
                                         <div>
                                             {doctor.availability.slice(0, 2).map((slot: string, i: number) => (
@@ -542,11 +542,11 @@ export default function PatientDashboard() {
 
             {/* Booking Modal */}
             {showBookingModal && selectedDoctor && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <Card className="w-full max-w-md bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <Card className="w-full max-w-md bg-card border-border">
                         <CardHeader>
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-slate-900 dark:text-white">Book Appointment</CardTitle>
+                                <CardTitle className="text-foreground">Book Appointment</CardTitle>
                                 <Button variant="ghost" size="sm" onClick={() => setShowBookingModal(false)}>
                                     <X className="h-4 w-4" />
                                 </Button>
@@ -564,35 +564,35 @@ export default function PatientDashboard() {
                                 </div>
                             ) : (
                                 <div className="space-y-4">
-                                    <div className="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-900 rounded-lg">
-                                        <div className="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                                    <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                                        <div className="h-10 w-10 rounded-full bg-muted overflow-hidden">
                                             <img src={selectedDoctor.image} alt={selectedDoctor.name} className="h-full w-full object-cover" />
                                         </div>
                                         <div>
-                                            <p className="font-medium text-slate-900 dark:text-white">{selectedDoctor.name}</p>
-                                            <p className="text-sm text-slate-500 dark:text-slate-400">{selectedDoctor.specialty}</p>
+                                            <p className="font-medium text-foreground">{selectedDoctor.name}</p>
+                                            <p className="text-sm text-muted-foreground">{selectedDoctor.specialty}</p>
                                         </div>
                                     </div>
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="date" className="text-slate-900 dark:text-white">Date *</Label>
+                                        <Label htmlFor="date" className="text-foreground">Date *</Label>
                                         <Input
                                             id="date"
                                             type="date"
                                             value={bookingDate}
                                             onChange={(e) => setBookingDate(e.target.value)}
                                             min={getMinDate()}
-                                            className="border-slate-300 dark:border-slate-600"
+                                            className="border-input"
                                         />
                                     </div>
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="time" className="text-slate-900 dark:text-white">Time *</Label>
+                                        <Label htmlFor="time" className="text-foreground">Time *</Label>
                                         <Select
                                             id="time"
                                             value={bookingTime}
                                             onChange={(e) => setBookingTime(e.target.value)}
-                                            className="border-slate-300 dark:border-slate-600"
+                                            className="border-input"
                                         >
                                             <option value="">Select a time slot</option>
                                             {TIME_SLOTS.map(slot => (
