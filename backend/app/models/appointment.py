@@ -79,5 +79,6 @@ class Appointment:
             'time': appointment['time'],
             'status': appointment['status'],
             'symptoms': appointment.get('symptoms', ''),
+            'rated': appointment.get('rated', False),
             'created_at': appointment.get('created_at', '').isoformat() if appointment.get('created_at') else None
         }

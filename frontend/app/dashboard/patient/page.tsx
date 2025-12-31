@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react"
 import { useAuth } from "@/lib/auth"
-import { Triage } from "@/components/shared/Triage"
 import { DoctorChatbot } from "@/components/shared/DoctorChatbot"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -20,6 +19,7 @@ interface Doctor {
     availability: string[];
     image: string;
     rating: number;
+    rating_count: number;
 }
 
 interface Appointment {
@@ -30,6 +30,7 @@ interface Appointment {
     time: string;
     status: string;
     symptoms: string;
+    rated?: boolean;
 }
 
 interface ChatMessage {
@@ -51,8 +52,6 @@ const TIME_SLOTS = [
 export default function PatientDashboard() {
     const { user, token, isLoading: authLoading } = useAuth()
     const [doctors, setDoctors] = useState<Doctor[]>([])
-    const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([])
-    const [suggestedSpecialties, setSuggestedSpecialties] = useState<string[]>([])
     const [appointments, setAppointments] = useState<Appointment[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -75,13 +74,21 @@ export default function PatientDashboard() {
     const chatPollInterval = useRef<NodeJS.Timeout | null>(null)
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
+    // Rating state
+    const [showRatingModal, setShowRatingModal] = useState(false)
+    const [ratingAppointment, setRatingAppointment] = useState<Appointment | null>(null)
+    const [ratingScore, setRatingScore] = useState(0)
+    const [ratingHover, setRatingHover] = useState(0)
+    const [ratingComment, setRatingComment] = useState("")
+    const [ratingLoading, setRatingLoading] = useState(false)
+    const [ratedAppointments, setRatedAppointments] = useState<Set<string>>(new Set())
+
     useEffect(() => {
         fetch('http://localhost:5000/api/doctors/')
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {
                     setDoctors(data)
-                    setFilteredDoctors(data)
                 }
                 setLoading(false)
             })
@@ -110,15 +117,6 @@ export default function PatientDashboard() {
             fetchAppointments()
         }
     }, [token, authLoading])
-
-    useEffect(() => {
-        if (suggestedSpecialties.length > 0) {
-            const filtered = doctors.filter(doc => suggestedSpecialties.includes(doc.specialty));
-            setFilteredDoctors(filtered.length > 0 ? filtered : doctors);
-        } else {
-            setFilteredDoctors(doctors);
-        }
-    }, [suggestedSpecialties, doctors])
 
     // Scroll to bottom of chat
     useEffect(() => {
@@ -258,6 +256,50 @@ export default function PatientDashboard() {
         }
     }
 
+    const openRatingModal = (appointment: Appointment) => {
+        setRatingAppointment(appointment)
+        setRatingScore(0)
+        setRatingHover(0)
+        setRatingComment("")
+        setShowRatingModal(true)
+    }
+
+    const submitRating = async () => {
+        if (!ratingAppointment || !token || ratingScore === 0) return
+
+        setRatingLoading(true)
+        try {
+            const res = await fetch('http://localhost:5000/api/ratings/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    appointmentId: ratingAppointment.id,
+                    score: ratingScore,
+                    comment: ratingComment
+                })
+            })
+
+            if (res.ok) {
+                setRatedAppointments(prev => new Set(prev).add(ratingAppointment.id))
+                setShowRatingModal(false)
+                // Refresh doctors to update ratings
+                fetch('http://localhost:5000/api/doctors/')
+                    .then(r => r.json())
+                    .then(data => { if (Array.isArray(data)) setDoctors(data) })
+            } else {
+                const data = await res.json()
+                console.error("Failed to submit rating:", data.error)
+            }
+        } catch (err) {
+            console.error("Failed to submit rating", err)
+        } finally {
+            setRatingLoading(false)
+        }
+    }
+
     if (loading || authLoading) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -326,11 +368,28 @@ export default function PatientDashboard() {
                                         </Button>
                                     )}
                                     {appt.status === 'completed' && (
-                                        <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-center">
-                                            <span className="text-sm text-blue-700 dark:text-blue-300 flex items-center justify-center gap-1">
-                                                <CheckCircle className="h-4 w-4" />
-                                                Consultation completed - Check Medical History
-                                            </span>
+                                        <div className="mt-3 space-y-2">
+                                            <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-center">
+                                                <span className="text-sm text-blue-700 dark:text-blue-300 flex items-center justify-center gap-1">
+                                                    <CheckCircle className="h-4 w-4" />
+                                                    Consultation completed - Check Medical History
+                                                </span>
+                                            </div>
+                                            {!appt.rated && !ratedAppointments.has(appt.id) && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="w-full gap-1 border-amber-300 text-amber-600 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-400"
+                                                    onClick={() => openRatingModal(appt)}
+                                                >
+                                                    <Star className="h-4 w-4" /> Rate Doctor
+                                                </Button>
+                                            )}
+                                            {(appt.rated || ratedAppointments.has(appt.id)) && (
+                                                <div className="text-center text-sm text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1">
+                                                    <CheckCircle className="h-4 w-4" /> Rated
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </CardContent>
@@ -340,24 +399,10 @@ export default function PatientDashboard() {
                 </div>
             )}
 
-            {/* AI Triage */}
-            <div>
-                <Triage onTriageComplete={setSuggestedSpecialties} />
-                {suggestedSpecialties.length > 0 && (
-                    <div className="mt-4 p-4 bg-primary/10 border border-primary/20 rounded-lg text-sm">
-                        <strong className="text-slate-900 dark:text-white">AI Suggestion:</strong>{" "}
-                        <span className="text-slate-700 dark:text-slate-300">Based on your symptoms, we recommend seeing a specialist in: {suggestedSpecialties.join(", ")}.</span>
-                        <Button variant="link" onClick={() => setSuggestedSpecialties([])} className="h-auto p-0 ml-2 text-primary">
-                            Clear filter
-                        </Button>
-                    </div>
-                )}
-            </div>
-
             {/* Available Doctors */}
             <div>
                 <h2 className="text-xl font-semibold mb-4 text-slate-900 dark:text-white">Available Doctors</h2>
-                {filteredDoctors.length === 0 ? (
+                {doctors.length === 0 ? (
                     <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
                         <CardContent className="py-8 text-center text-slate-500 dark:text-slate-400">
                             No doctors available at the moment.
@@ -365,7 +410,7 @@ export default function PatientDashboard() {
                     </Card>
                 ) : (
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {filteredDoctors.map((doctor) => (
+                        {doctors.map((doctor: Doctor) => (
                             <Card key={doctor.id} className="hover:shadow-lg transition-all hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
                                 <CardHeader className="flex flex-row items-center gap-4">
                                     <div className="h-14 w-14 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex-shrink-0 ring-2 ring-primary/20">
@@ -373,12 +418,15 @@ export default function PatientDashboard() {
                                     </div>
                                     <div className="grid gap-1 min-w-0">
                                         <CardTitle className="text-lg truncate text-slate-900 dark:text-white">{doctor.name}</CardTitle>
-                                        <CardDescription className="flex items-center gap-1">
+                                        <CardDescription className="flex items-center gap-1 flex-wrap">
                                             <span className="text-primary font-medium">{doctor.specialty}</span>
-                                            {doctor.rating && (
+                                            {doctor.rating > 0 && (
                                                 <span className="flex items-center ml-2 text-amber-500">
                                                     <Star className="h-3 w-3 fill-current" />
                                                     <span className="ml-0.5 text-xs">{doctor.rating}</span>
+                                                    {doctor.rating_count > 0 && (
+                                                        <span className="ml-1 text-xs text-slate-400">({doctor.rating_count} {doctor.rating_count === 1 ? 'review' : 'reviews'})</span>
+                                                    )}
                                                 </span>
                                             )}
                                         </CardDescription>
@@ -392,7 +440,7 @@ export default function PatientDashboard() {
                                     <div className="flex items-start text-sm text-slate-600 dark:text-slate-400">
                                         <Clock className="mr-2 h-4 w-4 mt-0.5 flex-shrink-0 text-primary/60" />
                                         <div>
-                                            {doctor.availability.slice(0, 2).map((slot, i) => (
+                                            {doctor.availability.slice(0, 2).map((slot: string, i: number) => (
                                                 <div key={i}>{slot}</div>
                                             ))}
                                             {doctor.availability.length > 2 && (
@@ -567,6 +615,85 @@ export default function PatientDashboard() {
                                 </Button>
                             </div>
                         </div>
+                    </Card>
+                </div>
+            )}
+
+            {/* Rating Modal */}
+            {showRatingModal && ratingAppointment && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <Card className="w-full max-w-md bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                        <CardHeader className="border-b border-slate-200 dark:border-slate-700">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle className="text-slate-900 dark:text-white">Rate Your Visit</CardTitle>
+                                    <CardDescription className="text-slate-500 dark:text-slate-400">
+                                        How was your experience with {ratingAppointment.doctorName}?
+                                    </CardDescription>
+                                </div>
+                                <Button variant="ghost" size="sm" onClick={() => setShowRatingModal(false)}>
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="pt-6 space-y-6">
+                            {/* Star Rating */}
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="flex gap-1">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                            key={star}
+                                            type="button"
+                                            onClick={() => setRatingScore(star)}
+                                            onMouseEnter={() => setRatingHover(star)}
+                                            onMouseLeave={() => setRatingHover(0)}
+                                            className="p-1 transition-transform hover:scale-110"
+                                        >
+                                            <Star
+                                                className={`h-10 w-10 transition-colors ${star <= (ratingHover || ratingScore)
+                                                    ? 'fill-amber-400 text-amber-400'
+                                                    : 'text-slate-300 dark:text-slate-600'
+                                                    }`}
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                                <span className="text-sm text-slate-500 dark:text-slate-400">
+                                    {ratingScore > 0 ? ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][ratingScore] : 'Select a rating'}
+                                </span>
+                            </div>
+
+                            {/* Comment */}
+                            <div className="space-y-2">
+                                <Label htmlFor="ratingComment" className="text-slate-900 dark:text-white">Comment (optional)</Label>
+                                <textarea
+                                    id="ratingComment"
+                                    value={ratingComment}
+                                    onChange={(e) => setRatingComment(e.target.value)}
+                                    placeholder="Share your experience..."
+                                    className="w-full h-24 px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                />
+                            </div>
+
+                            {/* Submit Button */}
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="outline"
+                                    className="flex-1"
+                                    onClick={() => setShowRatingModal(false)}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    className="flex-1 bg-amber-500 hover:bg-amber-600"
+                                    onClick={submitRating}
+                                    disabled={ratingLoading || ratingScore === 0}
+                                >
+                                    {ratingLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Submit Rating
+                                </Button>
+                            </div>
+                        </CardContent>
                     </Card>
                 </div>
             )}

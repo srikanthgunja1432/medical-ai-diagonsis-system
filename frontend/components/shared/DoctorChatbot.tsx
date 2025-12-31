@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { MessageCircle, X, Send, Loader2, Trash2, Bot, User } from "lucide-react"
+import ReactMarkdown from "react-markdown"
 
 interface ChatMessage {
     role: 'user' | 'assistant'
@@ -194,7 +195,7 @@ export function DoctorChatbot() {
                                         How can I help you today?
                                     </h3>
                                     <p className="text-sm text-slate-500 dark:text-slate-400">
-                                        Describe your symptoms and I'll recommend the best doctors for you.
+                                        Describe your symptoms and I&apos;ll recommend the best doctors for you.
                                     </p>
                                 </div>
                             ) : (
@@ -205,16 +206,22 @@ export function DoctorChatbot() {
                                     >
                                         <div className={`flex items-start gap-2 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                                             <div className={`flex-shrink-0 rounded-full p-1.5 ${msg.role === 'user'
-                                                    ? 'bg-primary text-white'
-                                                    : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                                                ? 'bg-primary text-white'
+                                                : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                                                 }`}>
                                                 {msg.role === 'user' ? <User className="h-3 w-3" /> : <Bot className="h-3 w-3" />}
                                             </div>
                                             <div className={`rounded-2xl px-4 py-2.5 ${msg.role === 'user'
-                                                    ? 'bg-primary text-white rounded-tr-md'
-                                                    : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-tl-md'
+                                                ? 'bg-primary text-white rounded-tr-md'
+                                                : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-tl-md'
                                                 }`}>
-                                                <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                                                {msg.role === 'assistant' ? (
+                                                    <div className="text-sm prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-headings:my-2 prose-strong:text-inherit">
+                                                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
