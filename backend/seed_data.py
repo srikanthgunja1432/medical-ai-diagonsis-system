@@ -4,14 +4,15 @@ Seed script to populate MongoDB with initial data for the Medical Project.
 Run this script to insert doctors, patients, and sample medical records.
 """
 
+import os
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 from bson import ObjectId
 
-# MongoDB connection
-MONGO_URI = 'mongodb://127.0.0.1:27017/'
-MONGO_DB_NAME = 'medical_project'
+# MongoDB connection - reads from environment variables with fallback
+MONGO_URI = os.getenv('MONGO_URI', 'mongodb://127.0.0.1:27017/')
+MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'medical_project')
 
 def seed_database():
     """Seed the database with initial data."""
