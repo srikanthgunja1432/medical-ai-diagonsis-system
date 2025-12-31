@@ -57,7 +57,6 @@ Medical_project_v1/
 │   ├── src/             # Source files
 │   ├── package.json     # Node dependencies
 │   └── ...
-├── venv/                 # Python virtual environment
 └── README.md            # This file
 ```
 
@@ -67,49 +66,42 @@ Medical_project_v1/
 
 ### Backend Setup
 
-1. **Navigate to the project root directory:**
+1. **Navigate to the backend directory:**
    ```bash
-   cd Medical_project_v1
+   cd backend
    ```
 
-2. **Create a Python virtual environment:**
+2. **Install dependencies with uv:**
+   This project uses `uv` for fast package management.
    ```bash
-   python3 -m venv venv
+   # Install dependencies and create virtual environment
+   uv sync
    ```
 
 3. **Activate the virtual environment:**
-   
-   - **Linux/macOS:**
-     ```bash
-     source venv/bin/activate
-     ```
-   
-   - **Windows:**
-     ```bash
-     venv\Scripts\activate
-     ```
-
-4. **Install Python dependencies:**
    ```bash
-   pip install -r backend/requirements.txt
+   source .venv/bin/activate
    ```
 
-5. **Set up environment variables (optional):**
-   
+4. **Set up environment variables:**
    Create a `.env` file in the `backend/` directory:
    ```env
-   FLASK_ENV=development
-   SECRET_KEY=your_secret_key_here
-   JWT_SECRET_KEY=your_jwt_secret_here
    MONGO_URI=mongodb://localhost:27017/medical_db
+   GOOGLE_API_KEY=your_google_api_key_here
+   ```
+   **Note**: `GOOGLE_API_KEY` is required for AI features.
+
+5. **Seed the database (Optional):**
+   Populate the database with sample data.
+   ```bash
+   python seed_data.py
    ```
 
-6. **Seed the database with sample data (optional):**
+6. **Run the Backend Server:**
    ```bash
-   cd backend
-   python seed_data.py
-   cd ..
+   python run.py
    ```
+   The backend API will be running at **http://localhost:5000**.
 
 ---
 
@@ -117,18 +109,19 @@ Medical_project_v1/
 
 1. **Navigate to the frontend directory:**
    ```bash
-   cd frontend
+   cd ../frontend
    ```
 
-2. **Install Node.js dependencies:**
+2. **Install dependencies:**
    ```bash
    npm install
    ```
-   
-   Or if using yarn:
+
+3. **Run the Development Server:**
    ```bash
-   yarn install
+   npm run dev
    ```
+   The frontend will be available at **http://localhost:3000**.
 
 ---
 
@@ -193,24 +186,20 @@ mongod --dbpath /path/to/data/directory
 
 ## 🔗 Quick Start (TL;DR)
 
-Run these commands in separate terminal windows:
-
 **Terminal 1 - Backend:**
 ```bash
-cd Medical_project_v1
-source venv/bin/activate
 cd backend
+uv sync
+source .venv/bin/activate
 python run.py
 ```
 
 **Terminal 2 - Frontend:**
 ```bash
-cd Medical_project_v1/frontend
+cd frontend
 npm install
 npm run dev
 ```
-
-Then open **http://localhost:3000** in your browser! 🎉
 
 ---
 
