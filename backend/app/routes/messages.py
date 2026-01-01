@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from bson import ObjectId
 from datetime import datetime, timedelta
 from ..models.message import Message
 from ..models.appointment import Appointment
