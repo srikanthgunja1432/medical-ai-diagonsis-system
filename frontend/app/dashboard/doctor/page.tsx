@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Check, X, MessageSquare, Loader2, User, Calendar, Users, Clock, Send, Mail, Phone, MapPin, Eye, CheckCircle, FileText, Pill, BarChart3, ClipboardList } from "lucide-react"
+import { Check, X, MessageSquare, Loader2, User, Calendar, Users, Clock, Send, Mail, Phone, MapPin, Eye, CheckCircle, FileText, Pill, BarChart3, ClipboardList, Video } from "lucide-react"
 import Link from "next/link"
 
 interface PatientDetails {
@@ -537,13 +537,22 @@ export default function DoctorDashboard() {
                                                 </>
                                             )}
                                             {appt.status === 'confirmed' && (
-                                                <Button
-                                                    size="sm"
-                                                    className="gap-1"
-                                                    onClick={() => openCompleteModal(appt)}
-                                                >
-                                                    <CheckCircle className="w-4 h-4" /> Complete
-                                                </Button>
+                                                <>
+                                                    <Button
+                                                        size="sm"
+                                                        className="gap-1 bg-emerald-600 hover:bg-emerald-500 text-white"
+                                                        onClick={() => window.location.href = `/call/${appt.id}`}
+                                                    >
+                                                        <Video className="w-4 h-4" /> Video Call
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        className="gap-1"
+                                                        onClick={() => openCompleteModal(appt)}
+                                                    >
+                                                        <CheckCircle className="w-4 h-4" /> Complete
+                                                    </Button>
+                                                </>
                                             )}
                                             {appt.status !== 'cancelled' && appt.status !== 'completed' && (
                                                 <Button

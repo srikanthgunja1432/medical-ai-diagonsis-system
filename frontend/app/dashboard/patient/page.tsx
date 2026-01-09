@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
-import { Calendar, MapPin, Star, X, Loader2, Clock, CheckCircle, FileText, User, MessageSquare, Send, Search, Filter, XCircle, ChevronDown, ChevronUp } from "lucide-react"
+import { Calendar, MapPin, Star, X, Loader2, Clock, CheckCircle, FileText, User, MessageSquare, Send, Search, Filter, XCircle, ChevronDown, ChevronUp, Video } from "lucide-react"
 import Link from "next/link"
 
 interface Doctor {
@@ -473,27 +473,40 @@ export default function PatientDashboard() {
                                             Revoke Appointment
                                         </Button>
                                     )}
-                                    {/* Confirmed: Show Chat button with time-based availability */}
-                                    {appt.status === 'confirmed' && (() => {
-                                        const chatStatus = isChatAvailable(appt)
-                                        return chatStatus.available ? (
+                                    {/* Confirmed: Show Join Call and Chat buttons */}
+                                    {appt.status === 'confirmed' && (
+                                        <div className="mt-3 space-y-2">
+                                            {/* Join Video Call button - always available for confirmed appointments */}
                                             <Button
                                                 size="sm"
-                                                variant="outline"
-                                                className="mt-3 gap-1 w-full border-slate-300 dark:border-slate-600"
-                                                onClick={() => openChat(appt)}
+                                                className="gap-1 w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+                                                onClick={() => window.location.href = `/call/${appt.id}`}
                                             >
-                                                <MessageSquare className="h-4 w-4" /> Chat with Doctor
+                                                <Video className="h-4 w-4" /> Join Video Call
                                             </Button>
-                                        ) : (
-                                            <div className="mt-3 p-2 bg-muted/50 rounded-lg text-center">
-                                                <span className="text-sm text-muted-foreground flex items-center justify-center gap-1">
-                                                    <Clock className="h-4 w-4" />
-                                                    {chatStatus.message}
-                                                </span>
-                                            </div>
-                                        )
-                                    })()}
+                                            {/* Chat button with time-based availability */}
+                                            {(() => {
+                                                const chatStatus = isChatAvailable(appt)
+                                                return chatStatus.available ? (
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="gap-1 w-full border-slate-300 dark:border-slate-600"
+                                                        onClick={() => openChat(appt)}
+                                                    >
+                                                        <MessageSquare className="h-4 w-4" /> Chat with Doctor
+                                                    </Button>
+                                                ) : (
+                                                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                                                        <span className="text-sm text-muted-foreground flex items-center justify-center gap-1">
+                                                            <Clock className="h-4 w-4" />
+                                                            {chatStatus.message}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            })()}
+                                        </div>
+                                    )}
                                     {appt.status === 'completed' && (
                                         <div className="mt-3 space-y-2">
                                             <div className="p-2 bg-secondary/50 rounded-lg text-center">
