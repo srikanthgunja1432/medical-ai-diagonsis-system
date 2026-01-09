@@ -158,6 +158,9 @@ export default function CallPage({ params }: CallPageProps) {
                     setRemoteStream(null);
                     setIsConnected(false);
                     setPeerRole(null);
+                    // Also navigate back when peer disconnects
+                    webrtcService.cleanup();
+                    router.push(`/dashboard/${user?.role || 'patient'}`);
                 },
                 onOffer: handleOffer,
                 onAnswer: handleAnswer,
@@ -166,7 +169,10 @@ export default function CallPage({ params }: CallPageProps) {
                 },
                 onCallEnded: (data) => {
                     console.log('[CallPage] Call ended by:', data.endedBy);
-                    handleEndCall();
+                    // Clean up and navigate when other party ends call
+                    webrtcService.cleanup();
+                    signalingService.disconnect();
+                    router.push(`/dashboard/${user?.role || 'patient'}`);
                 },
                 onError: (data) => {
                     setError(data.message);
@@ -206,10 +212,15 @@ export default function CallPage({ params }: CallPageProps) {
      * Handle ending the call
      */
     const handleEndCall = useCallback(() => {
+        // Send end call event to notify peer
         signalingService.endCall();
-        signalingService.disconnect();
+        // Clean up WebRTC
         webrtcService.cleanup();
-        router.push(`/dashboard/${user?.role || 'patient'}`);
+        // Wait a moment for the event to be sent before disconnecting
+        setTimeout(() => {
+            signalingService.disconnect();
+            router.push(`/dashboard/${user?.role || 'patient'}`);
+        }, 100);
     }, [router, user]);
 
     /**
