@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
-import { Calendar, MapPin, Star, X, Loader2, Clock, CheckCircle, FileText, User, MessageSquare, Send, Search, Filter, XCircle } from "lucide-react"
+import { Calendar, MapPin, Star, X, Loader2, Clock, CheckCircle, FileText, User, MessageSquare, Send, Search, Filter, XCircle, ChevronDown, ChevronUp } from "lucide-react"
 import Link from "next/link"
 
 interface Doctor {
@@ -89,6 +89,7 @@ export default function PatientDashboard() {
 
     // Search and filter state
     const [searchQuery, setSearchQuery] = useState('')
+    const [expandedAvailability, setExpandedAvailability] = useState<string | null>(null)
     const [selectedSpecialty, setSelectedSpecialty] = useState('')
     const [minRating, setMinRating] = useState(0)
     const [sortBy, setSortBy] = useState<'name' | 'rating'>('rating')
@@ -625,11 +626,30 @@ export default function PatientDashboard() {
                                     <div className="flex items-start text-sm text-muted-foreground">
                                         <Clock className="mr-2 h-4 w-4 mt-0.5 flex-shrink-0 text-primary/60" />
                                         <div>
-                                            {doctor.availability.slice(0, 2).map((slot: string, i: number) => (
+                                            {(expandedAvailability === doctor.id ? doctor.availability : doctor.availability.slice(0, 2)).map((slot: string, i: number) => (
                                                 <div key={i}>{slot}</div>
                                             ))}
                                             {doctor.availability.length > 2 && (
-                                                <div className="text-xs text-primary">+{doctor.availability.length - 2} more</div>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setExpandedAvailability(expandedAvailability === doctor.id ? null : doctor.id);
+                                                    }}
+                                                    className="text-xs text-primary hover:text-primary/80 hover:underline flex items-center gap-0.5 cursor-pointer mt-1"
+                                                >
+                                                    {expandedAvailability === doctor.id ? (
+                                                        <>
+                                                            <ChevronUp className="h-3 w-3" />
+                                                            Show less
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <ChevronDown className="h-3 w-3" />
+                                                            +{doctor.availability.length - 2} more
+                                                        </>
+                                                    )}
+                                                </button>
                                             )}
                                         </div>
                                     </div>
