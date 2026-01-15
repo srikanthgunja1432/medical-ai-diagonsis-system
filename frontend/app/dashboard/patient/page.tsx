@@ -10,8 +10,6 @@ import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { Calendar, MapPin, Star, X, Loader2, Clock, CheckCircle, FileText, User, MessageSquare, Send, Search, Filter, XCircle } from "lucide-react"
 import Link from "next/link"
-import { useCallNotificationContext } from "@/components/call/CallNotificationProvider"
-import { VideoCallButton } from "@/components/call/VideoCallButton"
 
 interface Doctor {
     id: string;
@@ -517,11 +515,9 @@ export default function PatientDashboard() {
                                             Revoke Appointment
                                         </Button>
                                     )}
-                                    {/* Confirmed: Show Call and Chat buttons */}
+                                    {/* Confirmed: Show Chat button */}
                                     {appt.status === 'confirmed' && (
                                         <div className="mt-3 space-y-2">
-                                            {/* Video Call button - sends invite to other party */}
-                                            <VideoCallButton appointmentId={appt.id} />
                                             {/* Chat button with time-based availability */}
                                             {(() => {
                                                 const chatStatus = isChatAvailable(appt)

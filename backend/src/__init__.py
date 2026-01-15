@@ -4,12 +4,7 @@ from flask_jwt_extended import JWTManager
 from .config import Config
 from .database import init_db
 
-# Global socketio instance - will be initialized in create_app
-socketio = None
-
 def create_app(config_class=Config):
-    global socketio
-    
     app = Flask(__name__)
     app.config.from_object(config_class)
 
@@ -19,10 +14,6 @@ def create_app(config_class=Config):
     
     # Initialize database
     init_db(app)
-    
-    # Initialize Socket.IO for video calling
-    from .routes.video_call import init_socketio
-    socketio = init_socketio(app, cors_allowed_origins="*")
 
     # Register Blueprints
     from .routes.auth import auth_bp

@@ -6,9 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Check, X, MessageSquare, Loader2, User, Calendar, Users, Clock, Send, Mail, Phone, MapPin, Eye, CheckCircle, FileText, Pill, BarChart3, ClipboardList, Video } from "lucide-react"
+import { Check, X, MessageSquare, Loader2, User, Calendar, Users, Clock, Send, Mail, Phone, MapPin, Eye, CheckCircle, FileText, Pill, BarChart3, ClipboardList } from "lucide-react"
 import Link from "next/link"
-import { VideoCallButton } from "@/components/call/VideoCallButton"
 
 interface PatientDetails {
     id: string;
@@ -539,7 +538,6 @@ export default function DoctorDashboard() {
                                             )}
                                             {appt.status === 'confirmed' && (
                                                 <>
-                                                    <VideoCallButton appointmentId={appt.id} />
                                                     <Button
                                                         size="sm"
                                                         className="gap-1"
