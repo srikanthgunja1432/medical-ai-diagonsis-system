@@ -8,24 +8,25 @@ import CTASection from './components/CTASection';
 import FooterSection from './components/FooterSection';
 
 export const metadata: Metadata = {
-    title: 'MediCare - Modern Healthcare Made Simple',
-    description: 'Connect with licensed doctors instantly through our secure telemedicine platform. Get AI-powered symptom assessment, video consultations, and comprehensive medical record management in one secure solution.',
+  title: 'MediCare - Modern Healthcare Made Simple',
+  description:
+    'Connect with licensed doctors instantly through our secure telemedicine platform. Get AI-powered symptom assessment, video consultations, and comprehensive medical record management in one secure solution.',
 };
 
 export default function Homepage() {
-    return (
-        <div className="min-h-screen bg-background">
-            <PublicHeader />
+  return (
+    <div className="min-h-screen bg-background">
+      <PublicHeader />
 
-            <main>
-                <HeroSection />
-                <FeaturesSection />
-                <TrustSignalsSection />
-                <StatsSection />
-                <CTASection />
-            </main>
+      <main>
+        <HeroSection />
+        <FeaturesSection />
+        <TrustSignalsSection />
+        <StatsSection />
+        <CTASection />
+      </main>
 
-            <FooterSection />
-        </div>
-    );
+      <FooterSection />
+    </div>
+  );
 }

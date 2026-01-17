@@ -74,7 +74,8 @@ const PatientDashboardInteractive = () => {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isRescheduleModalOpen, setIsRescheduleModalOpen] = useState(false);
-  const [selectedAppointmentForReschedule, setSelectedAppointmentForReschedule] = useState<Appointment | null>(null);
+  const [selectedAppointmentForReschedule, setSelectedAppointmentForReschedule] =
+    useState<Appointment | null>(null);
 
   // Data states
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -92,7 +93,9 @@ const PatientDashboardInteractive = () => {
   });
 
   // Appointment tab state
-  const [appointmentTab, setAppointmentTab] = useState<'upcoming' | 'pending' | 'completed' | 'rejected'>('upcoming');
+  const [appointmentTab, setAppointmentTab] = useState<
+    'upcoming' | 'pending' | 'completed' | 'rejected'
+  >('upcoming');
 
   useEffect(() => {
     setIsHydrated(true);
@@ -212,7 +215,7 @@ const PatientDashboardInteractive = () => {
 
   const handleReschedule = (id: string) => {
     if (isHydrated) {
-      const appointment = appointments.find(a => a.id === id);
+      const appointment = appointments.find((a) => a.id === id);
       if (appointment) {
         setSelectedAppointmentForReschedule(appointment);
         setIsRescheduleModalOpen(true);
@@ -436,15 +439,16 @@ const PatientDashboardInteractive = () => {
                 <div className="flex items-center gap-2 border-b border-border mb-6">
                   <button
                     onClick={() => setAppointmentTab('upcoming')}
-                    className={`pb-3 px-4 font-medium transition-base relative ${appointmentTab === 'upcoming'
-                      ? 'text-primary'
-                      : 'text-text-secondary hover:text-text-primary'
-                      }`}
+                    className={`pb-3 px-4 font-medium transition-base relative ${
+                      appointmentTab === 'upcoming'
+                        ? 'text-primary'
+                        : 'text-text-secondary hover:text-text-primary'
+                    }`}
                   >
                     Upcoming
-                    {appointments.filter(a => a.status === 'confirmed').length > 0 && (
+                    {appointments.filter((a) => a.status === 'confirmed').length > 0 && (
                       <span className="ml-2 px-2 py-0.5 bg-success/10 text-success rounded-full text-xs font-semibold">
-                        {appointments.filter(a => a.status === 'confirmed').length}
+                        {appointments.filter((a) => a.status === 'confirmed').length}
                       </span>
                     )}
                     {appointmentTab === 'upcoming' && (
@@ -453,15 +457,16 @@ const PatientDashboardInteractive = () => {
                   </button>
                   <button
                     onClick={() => setAppointmentTab('pending')}
-                    className={`pb-3 px-4 font-medium transition-base relative ${appointmentTab === 'pending'
-                      ? 'text-primary'
-                      : 'text-text-secondary hover:text-text-primary'
-                      }`}
+                    className={`pb-3 px-4 font-medium transition-base relative ${
+                      appointmentTab === 'pending'
+                        ? 'text-primary'
+                        : 'text-text-secondary hover:text-text-primary'
+                    }`}
                   >
                     Pending
-                    {appointments.filter(a => a.status === 'pending').length > 0 && (
+                    {appointments.filter((a) => a.status === 'pending').length > 0 && (
                       <span className="ml-2 px-2 py-0.5 bg-warning/10 text-warning rounded-full text-xs font-semibold">
-                        {appointments.filter(a => a.status === 'pending').length}
+                        {appointments.filter((a) => a.status === 'pending').length}
                       </span>
                     )}
                     {appointmentTab === 'pending' && (
@@ -470,15 +475,16 @@ const PatientDashboardInteractive = () => {
                   </button>
                   <button
                     onClick={() => setAppointmentTab('completed')}
-                    className={`pb-3 px-4 font-medium transition-base relative ${appointmentTab === 'completed'
-                      ? 'text-primary'
-                      : 'text-text-secondary hover:text-text-primary'
-                      }`}
+                    className={`pb-3 px-4 font-medium transition-base relative ${
+                      appointmentTab === 'completed'
+                        ? 'text-primary'
+                        : 'text-text-secondary hover:text-text-primary'
+                    }`}
                   >
                     Completed
-                    {appointments.filter(a => a.status === 'completed').length > 0 && (
+                    {appointments.filter((a) => a.status === 'completed').length > 0 && (
                       <span className="ml-2 px-2 py-0.5 bg-primary/10 text-primary rounded-full text-xs font-semibold">
-                        {appointments.filter(a => a.status === 'completed').length}
+                        {appointments.filter((a) => a.status === 'completed').length}
                       </span>
                     )}
                     {appointmentTab === 'completed' && (
@@ -487,15 +493,16 @@ const PatientDashboardInteractive = () => {
                   </button>
                   <button
                     onClick={() => setAppointmentTab('rejected')}
-                    className={`pb-3 px-4 font-medium transition-base relative ${appointmentTab === 'rejected'
-                      ? 'text-primary'
-                      : 'text-text-secondary hover:text-text-primary'
-                      }`}
+                    className={`pb-3 px-4 font-medium transition-base relative ${
+                      appointmentTab === 'rejected'
+                        ? 'text-primary'
+                        : 'text-text-secondary hover:text-text-primary'
+                    }`}
                   >
                     Rejected
-                    {appointments.filter(a => a.status === 'rejected').length > 0 && (
+                    {appointments.filter((a) => a.status === 'rejected').length > 0 && (
                       <span className="ml-2 px-2 py-0.5 bg-error/10 text-error rounded-full text-xs font-semibold">
-                        {appointments.filter(a => a.status === 'rejected').length}
+                        {appointments.filter((a) => a.status === 'rejected').length}
                       </span>
                     )}
                     {appointmentTab === 'rejected' && (
@@ -508,9 +515,9 @@ const PatientDashboardInteractive = () => {
                 <div className="space-y-4">
                   {appointmentTab === 'upcoming' && (
                     <>
-                      {appointments.filter(a => a.status === 'confirmed').length > 0 ? (
+                      {appointments.filter((a) => a.status === 'confirmed').length > 0 ? (
                         appointments
-                          .filter(a => a.status === 'confirmed')
+                          .filter((a) => a.status === 'confirmed')
                           .map((appointment) => (
                             <UpcomingAppointmentCard
                               key={appointment.id}
@@ -524,7 +531,11 @@ const PatientDashboardInteractive = () => {
                           ))
                       ) : (
                         <div className="text-center py-12">
-                          <Icon name="CalendarIcon" size={48} className="mx-auto text-text-secondary mb-4" />
+                          <Icon
+                            name="CalendarIcon"
+                            size={48}
+                            className="mx-auto text-text-secondary mb-4"
+                          />
                           <p className="text-text-secondary">No upcoming appointments</p>
                           <p className="text-sm text-text-secondary mt-1">
                             Book an appointment with a doctor below
@@ -536,9 +547,9 @@ const PatientDashboardInteractive = () => {
 
                   {appointmentTab === 'pending' && (
                     <>
-                      {appointments.filter(a => a.status === 'pending').length > 0 ? (
+                      {appointments.filter((a) => a.status === 'pending').length > 0 ? (
                         appointments
-                          .filter(a => a.status === 'pending')
+                          .filter((a) => a.status === 'pending')
                           .map((appointment) => (
                             <UpcomingAppointmentCard
                               key={appointment.id}
@@ -552,7 +563,11 @@ const PatientDashboardInteractive = () => {
                           ))
                       ) : (
                         <div className="text-center py-12">
-                          <Icon name="ClockIcon" size={48} className="mx-auto text-text-secondary mb-4" />
+                          <Icon
+                            name="ClockIcon"
+                            size={48}
+                            className="mx-auto text-text-secondary mb-4"
+                          />
                           <p className="text-text-secondary">No pending appointments</p>
                           <p className="text-sm text-text-secondary mt-1">
                             Your appointment requests will appear here
@@ -564,9 +579,9 @@ const PatientDashboardInteractive = () => {
 
                   {appointmentTab === 'completed' && (
                     <>
-                      {appointments.filter(a => a.status === 'completed').length > 0 ? (
+                      {appointments.filter((a) => a.status === 'completed').length > 0 ? (
                         appointments
-                          .filter(a => a.status === 'completed')
+                          .filter((a) => a.status === 'completed')
                           .map((appointment) => (
                             <UpcomingAppointmentCard
                               key={appointment.id}
@@ -580,7 +595,11 @@ const PatientDashboardInteractive = () => {
                           ))
                       ) : (
                         <div className="text-center py-12">
-                          <Icon name="CheckCircleIcon" size={48} className="mx-auto text-text-secondary mb-4" />
+                          <Icon
+                            name="CheckCircleIcon"
+                            size={48}
+                            className="mx-auto text-text-secondary mb-4"
+                          />
                           <p className="text-text-secondary">No completed appointments</p>
                           <p className="text-sm text-text-secondary mt-1">
                             Your completed consultations will appear here
@@ -592,9 +611,9 @@ const PatientDashboardInteractive = () => {
 
                   {appointmentTab === 'rejected' && (
                     <>
-                      {appointments.filter(a => a.status === 'rejected').length > 0 ? (
+                      {appointments.filter((a) => a.status === 'rejected').length > 0 ? (
                         appointments
-                          .filter(a => a.status === 'rejected')
+                          .filter((a) => a.status === 'rejected')
                           .map((appointment) => (
                             <UpcomingAppointmentCard
                               key={appointment.id}
@@ -608,7 +627,11 @@ const PatientDashboardInteractive = () => {
                           ))
                       ) : (
                         <div className="text-center py-12">
-                          <Icon name="XCircleIcon" size={48} className="mx-auto text-text-secondary mb-4" />
+                          <Icon
+                            name="XCircleIcon"
+                            size={48}
+                            className="mx-auto text-text-secondary mb-4"
+                          />
                           <p className="text-text-secondary">No rejected appointments</p>
                           <p className="text-sm text-text-secondary mt-1">
                             Appointments rejected by doctors will appear here
@@ -683,16 +706,16 @@ const PatientDashboardInteractive = () => {
                 activities.length > 0
                   ? activities
                   : [
-                    {
-                      id: '1',
-                      type: 'appointment' as const,
-                      title: 'Welcome!',
-                      description: 'Start by booking your first appointment',
-                      timestamp: 'Just now',
-                      icon: 'SparklesIcon',
-                      color: 'bg-primary',
-                    },
-                  ]
+                      {
+                        id: '1',
+                        type: 'appointment' as const,
+                        title: 'Welcome!',
+                        description: 'Start by booking your first appointment',
+                        timestamp: 'Just now',
+                        icon: 'SparklesIcon',
+                        color: 'bg-primary',
+                      },
+                    ]
               }
             />
           </div>
