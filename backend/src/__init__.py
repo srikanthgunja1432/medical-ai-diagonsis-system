@@ -12,7 +12,13 @@ def create_app(config_class=Config):
     app.url_map.strict_slashes = False
 
     # Extensions - Enhanced CORS to handle preflight requests properly
-    CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization"]}})
+    # Apply CORS to all routes with comprehensive configuration
+    CORS(app,
+         resources={r"/*": {"origins": "*"}},
+         supports_credentials=True,
+         allow_headers=["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
+         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+         expose_headers=["Content-Type", "Authorization"])
     JWTManager(app)
     
     # Initialize database
