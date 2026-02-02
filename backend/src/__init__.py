@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from .config import Config
@@ -7,19 +7,38 @@ from .database import init_db
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
-    
+
     # Disable strict slashes to prevent 308 redirects that break CORS
     app.url_map.strict_slashes = False
 
     # Extensions - Enhanced CORS to handle preflight requests properly
-    # Apply CORS to all routes with comprehensive configuration
-    CORS(app,
-         resources={r"/*": {"origins": "*"}},
-         supports_credentials=True,
-         allow_headers=["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
-         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-         expose_headers=["Content-Type", "Authorization"])
+    CORS(app)
     JWTManager(app)
+
+    # Add CORS headers to ALL responses including error responses
+    @app.after_request
+    def after_request(response):
+        origin = request.headers.get('Origin', '*')
+        response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With, Accept, Origin'
+        response.headers['Access-Control-Expose-Headers'] = 'Content-Type, Authorization'
+        return response
+
+    # Handle preflight OPTIONS requests
+    @app.before_request
+    def handle_preflight():
+        if request.method == 'OPTIONS':
+            from flask import make_response
+            response = make_response()
+            origin = request.headers.get('Origin', '*')
+            response.headers['Access-Control-Allow-Origin'] = origin
+            response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+            response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With, Accept, Origin'
+            response.headers['Access-Control-Allow-Credentials'] = 'true'
+            response.headers['Access-Control-Max-Age'] = '86400'
+            return response
     
     # Initialize database
     init_db(app)
