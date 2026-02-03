@@ -631,6 +631,41 @@ export const schedulesApi = {
     }),
 };
 
+// Video Call Types
+export interface VideoCallToken {
+  token: string;
+  api_key: string;
+  user_id: string;
+  user_name: string;
+}
+
+export interface CallDetails {
+  call_id: string;
+  token: string;
+  api_key: string;
+  user_id: string;
+  user_name: string;
+  appointment: Appointment;
+}
+
+// Video Calls API
+export const videoCallsApi = {
+  getToken: (): Promise<VideoCallToken> => fetchApi<VideoCallToken>('/video-calls/token', {
+    method: 'POST'
+  }),
+
+  createCall: (appointmentId: string): Promise<CallDetails> =>
+    fetchApi<CallDetails>(`/video-calls/call/${appointmentId}`, {
+      method: 'POST'
+    }),
+
+  endCall: (appointmentId: string, duration?: number): Promise<{ message: string }> =>
+    fetchApi<{ message: string }>(`/video-calls/call/${appointmentId}/end`, {
+      method: 'POST',
+      body: JSON.stringify({ duration })
+    }),
+};
+
 export default {
   auth: authApi,
   doctors: doctorsApi,
@@ -645,4 +680,5 @@ export default {
   reports: reportsApi,
   notifications: notificationsApi,
   schedules: schedulesApi,
+  videoCalls: videoCallsApi,
 };

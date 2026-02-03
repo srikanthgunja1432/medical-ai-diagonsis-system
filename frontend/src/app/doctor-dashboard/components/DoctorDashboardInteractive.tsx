@@ -19,6 +19,7 @@ import ChatPanel from './ChatPanel';
 import ReviewsSection from './ReviewsSection';
 import ConsultationModal, { type ConsultationData } from './ConsultationModal';
 import RejectReasonModal from './RejectReasonModal';
+import VideoCallModal from '@/components/video/VideoCallModal';
 import Icon from '@/components/ui/AppIcon';
 import {
   doctorsApi,
@@ -149,6 +150,10 @@ export default function DoctorDashboardInteractive() {
     id: string;
     patientName: string;
   } | null>(null);
+
+  // Video Call state
+  const [isVideoCallModalOpen, setIsVideoCallModalOpen] = useState(false);
+  const [videoCallAppointmentId, setVideoCallAppointmentId] = useState<string | null>(null);
 
   // Data states
   const [doctorProfile, setDoctorProfile] = useState<ApiDoctor | null>(null);
@@ -503,6 +508,13 @@ export default function DoctorDashboardInteractive() {
     }
   };
 
+  const handleJoinVideoCall = (id: string) => {
+    if (isHydrated) {
+      setVideoCallAppointmentId(id);
+      setIsVideoCallModalOpen(true);
+    }
+  };
+
   const handleFinishPatientAppointment = async (patientId: string) => {
     if (!isHydrated) return;
     try {
@@ -794,6 +806,7 @@ export default function DoctorDashboardInteractive() {
                     onReschedule={handleRescheduleAppointment}
                     onChat={handleChatWithPatient}
                     onFinish={handleFinishAppointment}
+                    onJoinCall={handleJoinVideoCall}
                   />
                 ))
               ) : (
@@ -940,6 +953,17 @@ export default function DoctorDashboardInteractive() {
           setPendingRejectRequest(null);
         }}
       />
+
+      {videoCallAppointmentId && (
+        <VideoCallModal
+          isOpen={isVideoCallModalOpen}
+          onClose={() => {
+            setIsVideoCallModalOpen(false);
+            setVideoCallAppointmentId(null);
+          }}
+          appointmentId={videoCallAppointmentId}
+        />
+      )}
     </div>
   );
 }

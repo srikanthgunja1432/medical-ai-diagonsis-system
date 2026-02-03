@@ -12,6 +12,7 @@ import DoctorChatModal from './DoctorChatModal';
 import ReviewDoctorModal from './ReviewDoctorModal';
 import BookingModal from './BookingModal';
 import RescheduleModal from './RescheduleModal';
+import VideoCallModal from '@/components/video/VideoCallModal';
 import Icon from '@/components/ui/AppIcon';
 import { useUser } from '../ClientLayout';
 import {
@@ -76,6 +77,8 @@ const PatientDashboardInteractive = () => {
   const [isRescheduleModalOpen, setIsRescheduleModalOpen] = useState(false);
   const [selectedAppointmentForReschedule, setSelectedAppointmentForReschedule] =
     useState<Appointment | null>(null);
+  const [isVideoCallModalOpen, setIsVideoCallModalOpen] = useState(false);
+  const [videoCallAppointmentId, setVideoCallAppointmentId] = useState<string | null>(null);
 
   // Data states
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -237,7 +240,8 @@ const PatientDashboardInteractive = () => {
 
   const handleJoinAppointment = (id: string) => {
     if (isHydrated) {
-      alert(`Joining video consultation for appointment ${id}`);
+      setVideoCallAppointmentId(id);
+      setIsVideoCallModalOpen(true);
     }
   };
 
@@ -761,6 +765,17 @@ const PatientDashboardInteractive = () => {
             setIsRescheduleModalOpen(false);
             setSelectedAppointmentForReschedule(null);
           }}
+        />
+      )}
+
+      {videoCallAppointmentId && (
+        <VideoCallModal
+          isOpen={isVideoCallModalOpen}
+          onClose={() => {
+            setIsVideoCallModalOpen(false);
+            setVideoCallAppointmentId(null);
+          }}
+          appointmentId={videoCallAppointmentId}
         />
       )}
     </>

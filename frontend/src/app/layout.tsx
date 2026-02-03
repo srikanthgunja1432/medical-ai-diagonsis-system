@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import '../styles/index.css';
+import { Providers } from './providers';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
 
         <script
           type="module"

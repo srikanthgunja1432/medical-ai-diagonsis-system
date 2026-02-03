@@ -94,6 +94,9 @@ class Appointment:
             'symptoms': appointment.get('symptoms', ''),
             'rated': appointment.get('rated', False),
             'rejectionReason': appointment.get('rejection_reason', ''),
-            'created_at': appointment.get('created_at', '').isoformat() if appointment.get('created_at') else None
+            'created_at': appointment.get('created_at', '').isoformat() if appointment.get('created_at') else None,
+            'call_started_at': appointment.get('call_started_at', '').isoformat() if appointment.get('call_started_at') else None,
+            'call_ended_at': appointment.get('call_ended_at', '').isoformat() if appointment.get('call_ended_at') else None,
+            'call_duration': appointment.get('call_duration'),
         }
 
