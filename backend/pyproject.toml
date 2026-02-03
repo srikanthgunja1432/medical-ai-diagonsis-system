@@ -24,4 +24,5 @@ dependencies = [
     "mongomock>=4.3.0",
     "gunicorn>=20.1.0",
     "getstream>=0.1.0",
+    "stream-chat>=3.0.0",
 ]
