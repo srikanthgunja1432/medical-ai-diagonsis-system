@@ -8,8 +8,9 @@ import json
 import os
 from datetime import datetime
 
-video_calls_bp = Blueprint('video_calls', __name__)
+video_calls_bp = Blueprint("video_calls", __name__)
 video_service = VideoCallService()
+
 
 def get_current_user():
     """Parse JWT identity and return user dict."""
@@ -18,107 +19,155 @@ def get_current_user():
         return json.loads(identity)
     return identity
 
-@video_calls_bp.route('/token', methods=['POST'])
+
+@video_calls_bp.route("/token", methods=["POST"])
 @jwt_required()
 def generate_token():
     """Generate a token for the current user to connect to GetStream"""
     current_user = get_current_user()
-    user_id = current_user['id']
-    role = current_user['role']
+    user_id = current_user["id"]
+    role = current_user["role"]
 
     # Get user details for token metadata
     user_name = "User"
-    if role == 'patient':
+    if role == "patient":
         patient = Patient.find_by_user_id(user_id)
         if patient:
-            user_name = f"{patient.get('firstName', '')} {patient.get('lastName', '')}".strip()
-    elif role == 'doctor':
+            user_name = (
+                f"{patient.get('firstName', '')} {patient.get('lastName', '')}".strip()
+            )
+    elif role == "doctor":
         doctor = Doctor.find_by_user_id(user_id)
         if doctor:
-            user_name = doctor.get('name', '')
+            user_name = doctor.get("name", "")
 
     token = video_service.generate_user_token(user_id, user_name, role)
 
     if not token:
-        return jsonify({'error': 'Failed to generate token. Service not configured.'}), 503
+        return jsonify(
+            {"error": "Failed to generate token. Service not configured."}
+        ), 503
 
-    return jsonify({
-        'token': token,
-        'api_key': os.environ.get('GETSTREAM_API_KEY'),
-        'user_id': user_id,
-        'user_name': user_name
-    })
+    return jsonify(
+        {
+            "token": token,
+            "api_key": os.environ.get("GETSTREAM_API_KEY"),
+            "user_id": user_id,
+            "user_name": user_name,
+        }
+    )
 
-@video_calls_bp.route('/call/<appointment_id>', methods=['POST'])
+
+@video_calls_bp.route("/call/<appointment_id>", methods=["POST"])
 @jwt_required()
 def create_call(appointment_id):
     """Initialize/Join a video call for an appointment"""
     current_user = get_current_user()
-    user_id = current_user['id']
-    role = current_user['role']
+    user_id = current_user["id"]
+    role = current_user["role"]
 
     # Validate appointment and permissions
     appointment = video_service.validate_call_access(user_id, appointment_id, role)
 
     if not appointment:
-        return jsonify({'error': 'Unauthorized or invalid appointment'}), 403
+        return jsonify({"error": "Unauthorized or invalid appointment"}), 403
 
     # Generate call ID
     call_id = video_service.create_call_id(appointment_id)
 
-    # Generate token for this user
+    # Get current user details
     user_name = "User"
-    if role == 'patient':
+    if role == "patient":
         patient = Patient.find_by_user_id(user_id)
         if patient:
-            user_name = f"{patient.get('firstName', '')} {patient.get('lastName', '')}".strip()
-    elif role == 'doctor':
+            user_name = (
+                f"{patient.get('firstName', '')} {patient.get('lastName', '')}".strip()
+            )
+    elif role == "doctor":
         doctor = Doctor.find_by_user_id(user_id)
         if doctor:
-            user_name = doctor.get('name', '')
+            user_name = doctor.get("name", "")
 
+    # Generate token for current user (this also upserts them to Stream)
     token = video_service.generate_user_token(user_id, user_name, role)
+
+    # Get other participant details and ensure they exist in Stream
+    other_user_id = None
+    other_user_name = None
+    other_role = None
+
+    if role == "patient":
+        # Current is patient, other is doctor
+        other_user_id = str(appointment.get("doctor_id"))
+        doctor = Doctor.find_by_user_id(other_user_id)
+        if doctor:
+            other_user_name = doctor.get("name", "Doctor")
+        else:
+            other_user_name = appointment.get("doctor_name", "Doctor")
+        other_role = "doctor"
+    else:
+        # Current is doctor, other is patient
+        other_user_id = str(appointment.get("patient_id"))
+        patient = Patient.find_by_user_id(other_user_id)
+        if patient:
+            other_user_name = (
+                f"{patient.get('firstName', '')} {patient.get('lastName', '')}".strip()
+            )
+            if not other_user_name:
+                other_user_name = appointment.get("patient_name", "Patient")
+        else:
+            other_user_name = appointment.get("patient_name", "Patient")
+        other_role = "patient"
+
+    # Upsert the other participant to Stream so they can receive calls
+    if other_user_id:
+        video_service.upsert_user(other_user_id, other_user_name, other_role)
 
     # If doctor is joining, we can optionally mark appointment as "in_progress"
     # if it was confirmed
-    if role == 'doctor' and appointment.get('status') == 'confirmed':
-        Appointment.update_status(appointment_id, 'in_progress')
+    if role == "doctor" and appointment.get("status") == "confirmed":
+        Appointment.update_status(appointment_id, "in_progress")
         # We could also record call start time here
-        Appointment.update(appointment_id, {'call_started_at': datetime.utcnow()})
+        Appointment.update(appointment_id, {"call_started_at": datetime.utcnow()})
 
-    return jsonify({
-        'call_id': call_id,
-        'token': token,
-        'api_key': os.environ.get('GETSTREAM_API_KEY'),
-        'user_id': user_id,
-        'user_name': user_name,
-        'appointment': Appointment.to_dict(appointment)
-    })
+    return jsonify(
+        {
+            "call_id": call_id,
+            "token": token,
+            "api_key": os.environ.get("GETSTREAM_API_KEY"),
+            "user_id": user_id,
+            "user_name": user_name,
+            "appointment": Appointment.to_dict(appointment),
+            "other_user_id": other_user_id,
+            "other_user_name": other_user_name,
+        }
+    )
 
-@video_calls_bp.route('/call/<appointment_id>/end', methods=['POST'])
+
+@video_calls_bp.route("/call/<appointment_id>/end", methods=["POST"])
 @jwt_required()
 def end_call(appointment_id):
     """End a video call"""
     current_user = get_current_user()
-    user_id = current_user['id']
-    role = current_user['role']
+    user_id = current_user["id"]
+    role = current_user["role"]
 
     # Validate access
     appointment = video_service.validate_call_access(user_id, appointment_id, role)
 
     if not appointment:
-        return jsonify({'error': 'Unauthorized or invalid appointment'}), 403
+        return jsonify({"error": "Unauthorized or invalid appointment"}), 403
 
     data = request.get_json() or {}
-    duration = data.get('duration', 0)
+    duration = data.get("duration", 0)
 
     # Update appointment metadata
     updates = {
-        'call_ended_at': datetime.utcnow(),
+        "call_ended_at": datetime.utcnow(),
     }
 
     if duration:
-        updates['call_duration'] = duration
+        updates["call_duration"] = duration
 
     # Only update status to completed if doctor ends it?
     # Or let the "Finish Consultation" button handle that.
@@ -126,4 +175,4 @@ def end_call(appointment_id):
 
     Appointment.update(appointment_id, updates)
 
-    return jsonify({'message': 'Call ended logged successfully'})
+    return jsonify({"message": "Call ended logged successfully"})

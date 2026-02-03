@@ -248,18 +248,17 @@ const PatientDashboardInteractive = () => {
   const handleJoinAppointment = async (id: string) => {
     if (!isHydrated) return;
     
-    // Find the appointment to get doctor details
+    // Find the appointment to get doctor details for UI
     const appointment = appointments.find((a) => a.id === id);
     if (!appointment) return;
     
     setVideoCallAppointmentId(id);
     setVideoCallDoctorName(appointment.doctorName);
-    setVideoCallDoctorId(appointment.doctorId);
     setIsVideoCallModalOpen(true);
     
     try {
-      // Initialize ringing call with doctor as member
-      await initializeCall(id, appointment.doctorId, appointment.doctorName);
+      // Initialize ringing call - backend handles user creation
+      await initializeCall(id);
     } catch (error) {
       console.error('Failed to start video call:', error);
       alert('Failed to start video call. Please try again.');

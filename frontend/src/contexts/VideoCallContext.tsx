@@ -24,7 +24,7 @@ interface VideoCallContextType {
   incomingCall: IncomingCall | null;
   isInitializing: boolean;
   isRinging: boolean;
-  initializeCall: (appointmentId: string, otherUserId: string, otherUserName: string) => Promise<void>;
+  initializeCall: (appointmentId: string) => Promise<void>;
   joinCall: (call: Call) => Promise<void>;
   acceptIncomingCall: () => Promise<void>;
   rejectIncomingCall: () => Promise<void>;
@@ -150,18 +150,14 @@ export function VideoCallProvider({ children }: { children: React.ReactNode }) {
     setIsRinging(false);
   }, []);
 
-  const initializeCall = async (
-    appointmentId: string,
-    otherUserId: string,
-    otherUserName: string
-  ): Promise<void> => {
+  const initializeCall = async (appointmentId: string): Promise<void> => {
     if (!client) throw new Error('Video client not initialized');
 
     setIsInitializing(true);
     setPendingAppointmentId(appointmentId);
 
     try {
-      // Get call details from backend
+      // Get call details from backend (backend now creates both users in Stream)
       const callDetails = await videoCallsApi.createCall(appointmentId);
 
       const call = client.call('default', callDetails.call_id);
@@ -173,10 +169,11 @@ export function VideoCallProvider({ children }: { children: React.ReactNode }) {
         data: {
           members: [
             { user_id: callDetails.user_id },
-            { user_id: otherUserId },
+            { user_id: callDetails.other_user_id },
           ],
           custom: {
             appointmentId,
+            callerName: callDetails.user_name,
           },
         },
       });
