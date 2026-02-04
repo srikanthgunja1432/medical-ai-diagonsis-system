@@ -1,4 +1,5 @@
-from stream_chat import StreamChat
+from getstream import Stream
+from getstream.models import UserRequest
 import os
 from datetime import datetime, timedelta
 from ..database import get_db, APPOINTMENTS_COLLECTION
@@ -12,38 +13,48 @@ class VideoCallService:
         self.client = None
         if self.api_key and self.api_secret:
             try:
-                self.client = StreamChat(
+                self.client = Stream(
                     api_key=self.api_key, api_secret=self.api_secret
                 )
+                print("Stream Video client initialized successfully")
             except Exception as e:
-                print(f"Error initializing StreamChat: {e}")
+                print(f"Error initializing Stream client: {e}")
 
     def generate_user_token(
         self, user_id: str, user_name: str = None, role: str = "patient"
     ):
         """Generate GetStream token for video call authentication"""
         if not self.client:
+            print("Stream client not initialized - check GETSTREAM_API_KEY and GETSTREAM_API_SECRET")
             return None
 
-        # Token expires in 24 hours
-        exp = int((datetime.utcnow() + timedelta(hours=24)).timestamp())
-
-        # Create token
-        token = self.client.create_token(user_id, exp=exp)
-
-        # Update user in Stream (optional but good for syncing names)
         try:
-            self.client.update_user(
-                {
-                    "id": user_id,
-                    "role": "admin" if role == "doctor" else "user",
-                    "name": user_name or user_id,
-                }
+            # Create token with 24 hour expiration (in seconds)
+            token = self.client.create_token(user_id, expiration=86400)
+
+            # Upsert user in Stream to sync their details
+            self._upsert_user_internal(user_id, user_name, role)
+
+            return token
+        except Exception as e:
+            print(f"Error generating token: {e}")
+            return None
+
+    def _upsert_user_internal(self, user_id: str, user_name: str = None, role: str = "patient"):
+        """Internal method to upsert user without returning result"""
+        if not self.client:
+            return
+
+        try:
+            self.client.upsert_users(
+                UserRequest(
+                    id=user_id,
+                    name=user_name or user_id,
+                    role="admin" if role == "doctor" else "user",
+                )
             )
         except Exception as e:
-            print(f"Error updating user in Stream: {e}")
-
-        return token
+            print(f"Error upserting user in Stream: {e}")
 
     def upsert_user(self, user_id: str, user_name: str = None, role: str = "patient"):
         """Create or update a user in Stream (for the other call participant)"""
@@ -51,12 +62,12 @@ class VideoCallService:
             return False
 
         try:
-            self.client.update_user(
-                {
-                    "id": user_id,
-                    "role": "admin" if role == "doctor" else "user",
-                    "name": user_name or user_id,
-                }
+            self.client.upsert_users(
+                UserRequest(
+                    id=user_id,
+                    name=user_name or user_id,
+                    role="admin" if role == "doctor" else "user",
+                )
             )
             return True
         except Exception as e:
@@ -98,3 +109,4 @@ class VideoCallService:
             return None
 
         return appointment
+
